@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Model checkpoints and training outputs (download pretrained models from the Baidu link in readme.md)
+*.model
+*.pth
+*.pt
+*.ckpt
+Pretrain/*
+!Pretrain/model.txt
+history/
+logs/
+runs/
+wandb/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
