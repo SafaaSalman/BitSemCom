@@ -1,0 +1,142 @@
+"""
+BitSemCom + GRAND experiment runner.
+
+For every image and every Es/N0 it transmits the SAME semantic bitstream through:
+  noiseless      : decoder fed the exact bits (ceiling for any channel code)
+  uncoded_soft   : original BitSemCom receiver (QPSK soft demod -> P(1) -> decoder)
+  uncoded_hard   : hard decisions (0/1) -> decoder
+  coded_hard     : [n,k] code + ORBGRAND, abandoned blocks fall back to hard decisions
+  coded_soft     : same, abandoned blocks fall back to channel posteriors
+  *_ebn0         : coded paths run at Es/N0 + 10log10(k/n), i.e. equal energy per
+                   semantic bit (coded path spends n/k more channel uses)
+
+Example:
+  python experiments/run_grand.py --C 16 --snrs 4,6,8,10 --limit 12 --code crc:0x9eb2:128:112
+"""
+import argparse
+import json
+import math
+import os
+import sys
+import time
+from collections import defaultdict
+
+import numpy as np
+import torch
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from experiments.bitsemcom_io import (Metrics, decode_probs, encode_bits, load_images,  # noqa: E402
+                                      load_model, qpsk_soft_original)
+from experiments.channel_coding import CodedLink, make_code, qpsk_awgn  # noqa: E402
+
+
+def to_tensor(p1_flat, like):
+    return torch.from_numpy(np.asarray(p1_flat, dtype=np.float32)).reshape(like.shape).to(like.device)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--C", type=int, default=16)
+    ap.add_argument("--snrs", default="4,6,8,10", help="Es/N0 in dB (QPSK), comma separated")
+    ap.add_argument("--images", default="datasets/kodak_patches256")
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--code", default="crc:0x9eb2:128:112")
+    ap.add_argument("--variant", default="1line", choices=["1line", "basic"])
+    ap.add_argument("--max_queries", type=int, default=10 ** 5)
+    ap.add_argument("--paths", default="noiseless,uncoded_soft,uncoded_hard,coded_hard,coded_soft,coded_hard_ebn0,coded_soft_ebn0")
+    ap.add_argument("--dec_snr", default="channel", help="'channel' or a fixed dB value fed to the semantic decoder")
+    ap.add_argument("--out", default="")
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--device", default="cuda")
+    args = ap.parse_args()
+
+    snrs = [float(s) for s in args.snrs.split(",")]
+    paths = args.paths.split(",")
+    G, H = make_code(args.code)
+    link = CodedLink(G, H, max_queries=args.max_queries, variant=args.variant)
+    rate_db = 10 * math.log10(link.rate)
+    net = load_model(args.C, args.device)
+    met = Metrics(torch.device(args.device))
+    images = load_images(args.images, limit=args.limit or None)
+    out_path = args.out or "results/C%d_%s_%s.jsonl" % (args.C, args.code.replace(":", "_"), args.variant)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    fout = open(out_path, "w")
+    print("C=%d code=%s (n=%d,k=%d, R=%.3f -> %.2f dB) variant=%s max_queries=%d images=%d"
+          % (args.C, args.code, link.n, link.k, link.rate, rate_db, args.variant, args.max_queries, len(images)))
+
+    agg = defaultdict(list)
+    t_start = time.time()
+    for ii, (name, img) in enumerate(images):
+        img = img.to(args.device)
+        for snr in snrs:
+            seed = args.seed * 100000 + ii * 1000 + int(round(snr * 10))
+            bits = encode_bits(net, img, snr, seed=seed)
+            bits_np = bits[0].detach().cpu().numpy().astype(np.uint8).reshape(-1)
+            rng = np.random.default_rng(seed)
+
+            def dec_snr(channel_snr):
+                return channel_snr if args.dec_snr == "channel" else float(args.dec_snr)
+
+            results = {}
+            for path in paths:
+                stats = {}
+                if path == "noiseless":
+                    p1 = bits
+                    ch_snr = snr
+                elif path == "uncoded_soft":
+                    torch.manual_seed(seed + 1)
+                    p1 = qpsk_soft_original(bits, snr)
+                    ch_snr = snr
+                elif path == "uncoded_hard":
+                    llr, p1f = qpsk_awgn(bits_np, snr, np.random.default_rng(seed + 2))
+                    p1 = to_tensor((llr < 0).astype(np.float32), bits)
+                    stats = dict(ber_channel=float(((llr < 0) != bits_np).mean()), symbols=int(bits_np.size // 2))
+                    ch_snr = snr
+                elif path.startswith("coded"):
+                    ch_snr = snr + rate_db if path.endswith("_ebn0") else snr
+                    fb = "soft" if "soft" in path else "hard"
+                    p1f, stats = link.transmit(bits_np, ch_snr, np.random.default_rng(seed + 3), fallback=fb)
+                    p1 = to_tensor(p1f, bits)
+                else:
+                    raise ValueError(path)
+                rec = decode_probs(net, p1, dec_snr(ch_snr))
+                psnr, ms = met(img, rec)
+                stats.pop("payload_bits", None)
+                rec_row = dict(image=name, C=args.C, snr=snr, path=path, channel_snr=ch_snr,
+                               psnr=psnr, msssim=ms, payload_bits=int(bits_np.size), **stats)
+                fout.write(json.dumps(rec_row) + "\n")
+                results[path] = rec_row
+                agg[(snr, path)].append(rec_row)
+            fout.flush()
+            line = " ".join("%s=%.2f" % (p[:12], results[p]["psnr"]) for p in paths)
+            extra = ""
+            if "coded_hard" in results:
+                r = results["coded_hard"]
+                extra = " | BERch=%.4f BERgrand=%.5f aband=%.2f EG=%.0f t=%.1fs" % (
+                    r["ber_channel"], r["ber_after"], r["abandon_rate"], r["avg_queries"], r["decode_time_s"])
+            print("[%2d/%2d %s snr=%4.1f] %s%s" % (ii + 1, len(images), name, snr, line, extra), flush=True)
+    fout.close()
+
+    print("\n=== Summary (mean over %d images), C=%d, code %s, %.0fs ===" % (len(images), args.C, args.code, time.time() - t_start))
+    hdr = "%-7s" % "Es/N0" + "".join("%16s" % p[:15] for p in paths)
+    print(hdr)
+    for snr in snrs:
+        print("%-7.1f" % snr + "".join("%16.2f" % np.mean([r["psnr"] for r in agg[(snr, p)]]) for p in paths))
+    print("MS-SSIM:")
+    for snr in snrs:
+        print("%-7.1f" % snr + "".join("%16.4f" % np.mean([r["msssim"] for r in agg[(snr, p)]]) for p in paths))
+    for p in paths:
+        if p.startswith("coded"):
+            print("GRAND stats for %s:" % p)
+            print("  Es/N0  chan_snr  BERch     BERafter  BLERch  BLERafter aband  miscorr  avgQ    symbols/payload")
+            for snr in snrs:
+                rows = agg[(snr, p)]
+                m = lambda key: float(np.mean([r[key] for r in rows]))
+                print("  %5.1f  %7.2f   %.5f  %.6f  %.3f   %.4f    %.3f  %.4f  %7.0f  %.3f" % (
+                    snr, m("channel_snr"), m("ber_channel"), m("ber_after"), m("bler_channel"), m("bler_after"),
+                    m("abandon_rate"), m("miscorrect_rate"), m("avg_queries"), m("symbols") / (m("payload_bits") / 2)))
+    print("wrote", out_path)
+
+
+if __name__ == "__main__":
+    main()

@@ -23,3 +23,6 @@ wandb/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local test datasets (downloaded, not tracked)
+datasets/
