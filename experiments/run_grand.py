@@ -27,7 +27,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from experiments.bitsemcom_io import (Metrics, decode_probs, encode_bits, load_images,  # noqa: E402
                                       load_model, qpsk_soft_original)
-from experiments.channel_coding import CodedLink, make_code, qpsk_awgn  # noqa: E402
+from experiments.channel_coding import CodedLink, make_code, qpsk_channel  # noqa: E402
 
 
 def to_tensor(p1_flat, like):
@@ -45,6 +45,9 @@ def main():
     ap.add_argument("--max_queries", type=int, default=10 ** 5)
     ap.add_argument("--paths", default="noiseless,uncoded_soft,uncoded_hard,coded_hard,coded_soft,coded_hard_ebn0,coded_soft_ebn0")
     ap.add_argument("--dec_snr", default="channel", help="'channel' or a fixed dB value fed to the semantic decoder")
+    ap.add_argument("--channel", default="awgn", choices=["awgn", "blockfading"])
+    ap.add_argument("--fade_block", type=int, default=8, help="symbols per fading block (8 = one C=16 token)")
+    ap.add_argument("--no_interleave", action="store_true", help="coded paths: do not interleave codewords")
     ap.add_argument("--out", default="")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda")
@@ -61,8 +64,9 @@ def main():
     out_path = args.out or "results/C%d_%s_%s.jsonl" % (args.C, args.code.replace(":", "_"), args.variant)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     fout = open(out_path, "w")
-    print("C=%d code=%s (n=%d,k=%d, R=%.3f -> %.2f dB) variant=%s max_queries=%d images=%d"
-          % (args.C, args.code, link.n, link.k, link.rate, rate_db, args.variant, args.max_queries, len(images)))
+    print("C=%d code=%s (n=%d,k=%d, R=%.3f -> %.2f dB) variant=%s max_queries=%d images=%d channel=%s fade_block=%d interleave=%s"
+          % (args.C, args.code, link.n, link.k, link.rate, rate_db, args.variant, args.max_queries, len(images),
+             args.channel, args.fade_block, not args.no_interleave))
 
     agg = defaultdict(list)
     t_start = time.time()
@@ -84,18 +88,34 @@ def main():
                     p1 = bits
                     ch_snr = snr
                 elif path == "uncoded_soft":
+                    if args.channel != "awgn":
+                        raise ValueError("uncoded_soft uses the original QPSK_soft (AWGN only); use uncoded_soft_np")
                     torch.manual_seed(seed + 1)
                     p1 = qpsk_soft_original(bits, snr)
                     ch_snr = snr
-                elif path == "uncoded_hard":
-                    llr, p1f = qpsk_awgn(bits_np, snr, np.random.default_rng(seed + 2))
-                    p1 = to_tensor((llr < 0).astype(np.float32), bits)
+                elif path in ("uncoded_soft_np", "uncoded_soft_il", "uncoded_hard"):
+                    # numpy channel; '_il' interleaves the semantic bits over the transmission
+                    rng_u = np.random.default_rng(seed + 2)
+                    if path == "uncoded_soft_il":
+                        perm = np.random.default_rng(12345).permutation(bits_np.size)
+                        inv = np.empty_like(perm)
+                        inv[perm] = np.arange(bits_np.size)
+                        llr_p, p1_p = qpsk_channel(bits_np[perm], snr, rng_u, args.channel, args.fade_block)
+                        llr, p1f = llr_p[inv], p1_p[inv]
+                    else:
+                        llr, p1f = qpsk_channel(bits_np, snr, rng_u, args.channel, args.fade_block)
+                    if path == "uncoded_hard":
+                        p1 = to_tensor((llr < 0).astype(np.float32), bits)
+                    else:
+                        p1 = to_tensor(p1f, bits)
                     stats = dict(ber_channel=float(((llr < 0) != bits_np).mean()), symbols=int(bits_np.size // 2))
                     ch_snr = snr
                 elif path.startswith("coded"):
-                    ch_snr = snr + rate_db if path.endswith("_ebn0") else snr
+                    ch_snr = snr + rate_db if "_ebn0" in path else snr
                     fb = "soft" if "soft" in path else "hard"
-                    p1f, stats = link.transmit(bits_np, ch_snr, np.random.default_rng(seed + 3), fallback=fb)
+                    il = (not args.no_interleave) and ("_noil" not in path)
+                    p1f, stats = link.transmit(bits_np, ch_snr, np.random.default_rng(seed + 3), fallback=fb,
+                                               channel=args.channel, fade_block=args.fade_block, interleave=il)
                     p1 = to_tensor(p1f, bits)
                 else:
                     raise ValueError(path)

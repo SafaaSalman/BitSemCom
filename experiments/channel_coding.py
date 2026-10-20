@@ -2,9 +2,10 @@
 Channel-coding layer between BitSemCom's bit mapper and its semantic decoder.
 
 Transmitter:  semantic bits (flattened) -> pad -> k-bit blocks -> [n,k] systematic code
-              -> QPSK (Gray, same mapping as network.QPSK_soft) -> AWGN
-Receiver:     LLRs (positive = bit 0) -> ORBGRAND per block -> payload bits -> unpad
-              -> P(bit=1) for the semantic decoder
+              -> optional interleaver -> QPSK (Gray, same mapping as network.QPSK_soft)
+              -> AWGN or block-Rayleigh fading
+Receiver:     coherent LLRs (positive = bit 0) -> de-interleave -> ORBGRAND per block
+              -> payload bits -> unpad -> P(bit=1) for the semantic decoder
 
 All randomness goes through an explicit numpy Generator so every path in an experiment
 sees the same transmitted bits.
@@ -37,20 +38,42 @@ def make_code(spec):
     return G, H
 
 
-def qpsk_awgn(bits, snr_db, rng):
-    """QPSK + AWGN exactly as network.QPSK_soft: consecutive bit pairs -> (I,Q), Gray map
-    0 -> +1/sqrt2, 1 -> -1/sqrt2, per-component noise variance 1/(2*Es/N0).
+def qpsk_channel(bits, snr_db, rng, channel="awgn", fade_block=0):
+    """QPSK + AWGN exactly as network.QPSK_soft (consecutive bit pairs -> (I,Q), Gray map
+    0 -> +1/sqrt2, 1 -> -1/sqrt2, per-component noise variance 1/(2*Es/N0)), optionally
+    with block Rayleigh fading: one complex gain h ~ CN(0,1) per `fade_block` consecutive
+    symbols, known at the receiver (coherent detection). snr_db is the AVERAGE Es/N0.
     Returns (llr, p1) flattened to the length of bits (positive LLR = bit 0)."""
     bits = np.asarray(bits, dtype=np.float64)
     assert bits.size % 2 == 0
     b = bits.reshape(-1, 2)
-    s = (1.0 - 2.0 * b) / math.sqrt(2.0)
+    s = (1.0 - 2.0 * b) / math.sqrt(2.0)  # (nsym, 2) real/imag
     snr = 10 ** (snr_db / 10.0)
     nv = 1.0 / (2.0 * snr)
-    r = s + math.sqrt(nv) * rng.standard_normal(s.shape)
-    llr = (math.sqrt(2.0) * r / nv).reshape(-1)
-    p1 = 1.0 / (1.0 + np.exp(llr))  # sigmoid(-llr)
+    noise = math.sqrt(nv) * rng.standard_normal(s.shape)
+    if channel == "awgn":
+        r = s + noise
+        gain = np.ones(s.shape[0])
+    elif channel == "blockfading":
+        nsym = s.shape[0]
+        nblk = int(math.ceil(nsym / fade_block))
+        h = (rng.standard_normal(nblk) + 1j * rng.standard_normal(nblk)) / math.sqrt(2.0)
+        hs = np.repeat(h, fade_block)[:nsym]
+        sc = (s[:, 0] + 1j * s[:, 1]) * hs
+        rc = sc + (noise[:, 0] + 1j * noise[:, 1])
+        # coherent matched filter: rotate by conj(h)/|h| -> |h| s + noise'
+        gain = np.abs(hs)
+        y = rc * np.conj(hs) / np.maximum(gain, 1e-12)
+        r = np.stack([y.real, y.imag], axis=1)
+    else:
+        raise ValueError(channel)
+    llr = (math.sqrt(2.0) * gain[:, None] * r / nv).reshape(-1)
+    p1 = 1.0 / (1.0 + np.exp(np.clip(llr, -500, 500)))  # sigmoid(-llr)
     return llr, p1
+
+
+def qpsk_awgn(bits, snr_db, rng):
+    return qpsk_channel(bits, snr_db, rng, "awgn")
 
 
 class CodedLink:
@@ -63,12 +86,14 @@ class CodedLink:
     def rate(self):
         return self.k / self.n
 
-    def transmit(self, bits_flat, snr_db, rng, fallback="hard"):
+    def transmit(self, bits_flat, snr_db, rng, fallback="hard", channel="awgn", fade_block=0, interleave=False):
         """bits_flat: 1-D 0/1 array of semantic bits. Returns (p1_out, stats).
 
         p1_out is the P(bit=1) sequence handed to the semantic decoder: decoded blocks
         give exact 0/1 values; abandoned blocks give either the hard decisions
         ('hard') or the channel posteriors of their systematic bits ('soft').
+        With interleave=True a fixed pseudo-random permutation (known to both sides)
+        spreads every codeword over the whole transmission.
         """
         bits_flat = np.asarray(bits_flat, dtype=np.uint8).reshape(-1)
         L = bits_flat.size
@@ -80,7 +105,14 @@ class CodedLink:
         extra = tx.size % 2
         if extra:
             tx = np.concatenate([tx, np.zeros(1, dtype=np.uint8)])
-        llr, p1 = qpsk_awgn(tx, snr_db, rng)
+        if interleave:
+            perm = np.random.default_rng(12345).permutation(tx.size)
+            inv = np.empty_like(perm)
+            inv[perm] = np.arange(tx.size)
+            llr_tx, p1_tx = qpsk_channel(tx[perm], snr_db, rng, channel, fade_block)
+            llr, p1 = llr_tx[inv], p1_tx[inv]
+        else:
+            llr, p1 = qpsk_channel(tx, snr_db, rng, channel, fade_block)
         llr_b = llr[: nb * self.n].reshape(nb, self.n)
         p1_b = p1[: nb * self.n].reshape(nb, self.n)
 

@@ -1,0 +1,225 @@
+loaded Pretrain\BitSemCom_C32_stage2_ep480.model  (missing=0 unexpected=0)
+C=32 code=crc:0x9eb2:128:112 (n=128,k=112, R=0.875 -> -0.58 dB) variant=1line max_queries=100000 images=24
+[ 1/24 kodim01.png snr= 2.0] noiseless=20.85 uncoded_soft=20.57 uncoded_hard=20.09 coded_hard=20.05 coded_soft=20.13 coded_hard_e=19.99 coded_soft_e=20.06 | BERch=0.1053 BERgrand=0.11511 aband=0.15 EG=50200 t=0.1s
+[ 1/24 kodim01.png snr= 4.0] noiseless=20.86 uncoded_soft=20.75 uncoded_hard=20.60 coded_hard=20.48 coded_soft=20.52 coded_hard_e=20.41 coded_soft_e=20.44 | BERch=0.0560 BERgrand=0.05762 aband=0.19 EG=42403 t=0.1s
+[ 1/24 kodim01.png snr= 5.0] noiseless=20.83 uncoded_soft=20.74 uncoded_hard=20.59 coded_hard=20.67 coded_soft=20.68 coded_hard_e=20.58 coded_soft_e=20.58 | BERch=0.0382 BERgrand=0.02856 aband=0.04 EG=21401 t=0.1s
+[ 1/24 kodim01.png snr= 6.0] noiseless=20.88 uncoded_soft=20.83 uncoded_hard=20.77 coded_hard=20.88 coded_soft=20.88 coded_hard_e=20.76 coded_soft_e=20.76 | BERch=0.0229 BERgrand=0.00293 aband=0.00 EG=4581 t=0.0s
+[ 1/24 kodim01.png snr= 7.0] noiseless=20.84 uncoded_soft=20.82 uncoded_hard=20.82 coded_hard=20.84 coded_soft=20.84 coded_hard_e=20.85 coded_soft_e=20.85 | BERch=0.0132 BERgrand=0.00085 aband=0.00 EG=793 t=0.0s
+[ 1/24 kodim01.png snr= 8.0] noiseless=20.86 uncoded_soft=20.86 uncoded_hard=20.83 coded_hard=20.86 coded_soft=20.86 coded_hard_e=20.86 coded_soft_e=20.86 | BERch=0.0057 BERgrand=0.00000 aband=0.00 EG=10 t=0.0s
+[ 1/24 kodim01.png snr=10.0] noiseless=20.85 uncoded_soft=20.85 uncoded_hard=20.85 coded_hard=20.85 coded_soft=20.85 coded_hard_e=20.85 coded_soft_e=20.85 | BERch=0.0006 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 2/24 kodim02.png snr= 2.0] noiseless=26.65 uncoded_soft=25.79 uncoded_hard=25.14 coded_hard=25.30 coded_soft=25.42 coded_hard_e=25.13 coded_soft_e=25.46 | BERch=0.1035 BERgrand=0.10840 aband=0.23 EG=52196 t=0.1s
+[ 2/24 kodim02.png snr= 4.0] noiseless=26.58 uncoded_soft=26.10 uncoded_hard=26.22 coded_hard=26.26 coded_soft=26.26 coded_hard_e=26.00 coded_soft_e=26.02 | BERch=0.0577 BERgrand=0.06299 aband=0.14 EG=39475 t=0.1s
+[ 2/24 kodim02.png snr= 5.0] noiseless=26.66 uncoded_soft=26.50 uncoded_hard=26.45 coded_hard=26.35 coded_soft=26.36 coded_hard_e=26.09 coded_soft_e=26.09 | BERch=0.0400 BERgrand=0.03088 aband=0.12 EG=24445 t=0.1s
+[ 2/24 kodim02.png snr= 6.0] noiseless=26.63 uncoded_soft=26.53 uncoded_hard=26.39 coded_hard=26.61 coded_soft=26.61 coded_hard_e=26.58 coded_soft_e=26.59 | BERch=0.0222 BERgrand=0.00403 aband=0.03 EG=6854 t=0.0s
+[ 2/24 kodim02.png snr= 7.0] noiseless=26.64 uncoded_soft=26.61 uncoded_hard=26.56 coded_hard=26.64 coded_soft=26.64 coded_hard_e=26.63 coded_soft_e=26.63 | BERch=0.0104 BERgrand=0.00000 aband=0.00 EG=243 t=0.0s
+[ 2/24 kodim02.png snr= 8.0] noiseless=26.63 uncoded_soft=26.57 uncoded_hard=26.62 coded_hard=26.63 coded_soft=26.63 coded_hard_e=26.63 coded_soft_e=26.63 | BERch=0.0066 BERgrand=0.00000 aband=0.00 EG=32 t=0.0s
+[ 2/24 kodim02.png snr=10.0] noiseless=26.56 uncoded_soft=26.57 uncoded_hard=26.58 coded_hard=26.56 coded_soft=26.56 coded_hard_e=26.56 coded_soft_e=26.56 | BERch=0.0002 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 3/24 kodim03.png snr= 2.0] noiseless=25.96 uncoded_soft=24.79 uncoded_hard=23.79 coded_hard=24.58 coded_soft=24.67 coded_hard_e=24.23 coded_soft_e=24.35 | BERch=0.1041 BERgrand=0.11328 aband=0.16 EG=53904 t=0.1s
+[ 3/24 kodim03.png snr= 4.0] noiseless=26.32 uncoded_soft=25.83 uncoded_hard=25.71 coded_hard=25.66 coded_soft=25.63 coded_hard_e=25.39 coded_soft_e=25.45 | BERch=0.0557 BERgrand=0.05737 aband=0.09 EG=35922 t=0.1s
+[ 3/24 kodim03.png snr= 5.0] noiseless=26.47 uncoded_soft=26.22 uncoded_hard=25.95 coded_hard=26.12 coded_soft=26.13 coded_hard_e=25.89 coded_soft_e=25.90 | BERch=0.0333 BERgrand=0.02441 aband=0.03 EG=19576 t=0.1s
+[ 3/24 kodim03.png snr= 6.0] noiseless=26.29 uncoded_soft=26.19 uncoded_hard=26.24 coded_hard=26.26 coded_soft=26.26 coded_hard_e=26.22 coded_soft_e=26.24 | BERch=0.0220 BERgrand=0.00208 aband=0.00 EG=4123 t=0.0s
+[ 3/24 kodim03.png snr= 7.0] noiseless=26.24 uncoded_soft=26.11 uncoded_hard=26.18 coded_hard=26.24 coded_soft=26.24 coded_hard_e=26.23 coded_soft_e=26.23 | BERch=0.0118 BERgrand=0.00000 aband=0.00 EG=179 t=0.0s
+[ 3/24 kodim03.png snr= 8.0] noiseless=26.39 uncoded_soft=26.39 uncoded_hard=26.22 coded_hard=26.39 coded_soft=26.39 coded_hard_e=26.39 coded_soft_e=26.39 | BERch=0.0071 BERgrand=0.00000 aband=0.00 EG=7 t=0.0s
+[ 3/24 kodim03.png snr=10.0] noiseless=26.18 uncoded_soft=26.16 uncoded_hard=26.21 coded_hard=26.18 coded_soft=26.18 coded_hard_e=26.18 coded_soft_e=26.18 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 4/24 kodim04.png snr= 2.0] noiseless=29.82 uncoded_soft=28.89 uncoded_hard=27.49 coded_hard=27.25 coded_soft=27.44 coded_hard_e=26.65 coded_soft_e=26.88 | BERch=0.1074 BERgrand=0.11548 aband=0.19 EG=48094 t=0.1s
+[ 4/24 kodim04.png snr= 4.0] noiseless=29.85 uncoded_soft=29.47 uncoded_hard=28.55 coded_hard=29.19 coded_soft=29.21 coded_hard_e=28.76 coded_soft_e=28.86 | BERch=0.0583 BERgrand=0.06702 aband=0.14 EG=45027 t=0.1s
+[ 4/24 kodim04.png snr= 5.0] noiseless=29.80 uncoded_soft=29.53 uncoded_hard=29.10 coded_hard=29.25 coded_soft=29.25 coded_hard_e=29.07 coded_soft_e=29.08 | BERch=0.0353 BERgrand=0.02417 aband=0.03 EG=22746 t=0.1s
+[ 4/24 kodim04.png snr= 6.0] noiseless=29.83 uncoded_soft=29.69 uncoded_hard=29.57 coded_hard=29.76 coded_soft=29.77 coded_hard_e=29.64 coded_soft_e=29.64 | BERch=0.0238 BERgrand=0.00549 aband=0.01 EG=5807 t=0.0s
+[ 4/24 kodim04.png snr= 7.0] noiseless=29.72 uncoded_soft=29.65 uncoded_hard=29.60 coded_hard=29.72 coded_soft=29.72 coded_hard_e=29.70 coded_soft_e=29.70 | BERch=0.0114 BERgrand=0.00000 aband=0.00 EG=742 t=0.0s
+[ 4/24 kodim04.png snr= 8.0] noiseless=29.70 uncoded_soft=29.64 uncoded_hard=29.66 coded_hard=29.70 coded_soft=29.70 coded_hard_e=29.70 coded_soft_e=29.70 | BERch=0.0051 BERgrand=0.00000 aband=0.00 EG=9 t=0.0s
+[ 4/24 kodim04.png snr=10.0] noiseless=29.75 uncoded_soft=29.73 uncoded_hard=29.75 coded_hard=29.75 coded_soft=29.75 coded_hard_e=29.75 coded_soft_e=29.75 | BERch=0.0009 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 5/24 kodim05.png snr= 2.0] noiseless=18.48 uncoded_soft=18.01 uncoded_hard=17.50 coded_hard=17.72 coded_soft=17.81 coded_hard_e=17.48 coded_soft_e=17.54 | BERch=0.0966 BERgrand=0.10315 aband=0.22 EG=47583 t=0.1s
+[ 5/24 kodim05.png snr= 4.0] noiseless=18.47 uncoded_soft=18.15 uncoded_hard=18.12 coded_hard=18.08 coded_soft=18.09 coded_hard_e=17.93 coded_soft_e=17.95 | BERch=0.0548 BERgrand=0.06152 aband=0.15 EG=44534 t=0.1s
+[ 5/24 kodim05.png snr= 5.0] noiseless=18.47 uncoded_soft=18.25 uncoded_hard=18.21 coded_hard=18.30 coded_soft=18.31 coded_hard_e=18.19 coded_soft_e=18.21 | BERch=0.0361 BERgrand=0.02332 aband=0.09 EG=22829 t=0.1s
+[ 5/24 kodim05.png snr= 6.0] noiseless=18.41 uncoded_soft=18.34 uncoded_hard=18.29 coded_hard=18.36 coded_soft=18.36 coded_hard_e=18.28 coded_soft_e=18.28 | BERch=0.0208 BERgrand=0.00500 aband=0.00 EG=4067 t=0.0s
+[ 5/24 kodim05.png snr= 7.0] noiseless=18.45 uncoded_soft=18.39 uncoded_hard=18.39 coded_hard=18.45 coded_soft=18.45 coded_hard_e=18.44 coded_soft_e=18.44 | BERch=0.0132 BERgrand=0.00000 aband=0.00 EG=235 t=0.0s
+[ 5/24 kodim05.png snr= 8.0] noiseless=18.49 uncoded_soft=18.48 uncoded_hard=18.43 coded_hard=18.49 coded_soft=18.49 coded_hard_e=18.49 coded_soft_e=18.49 | BERch=0.0072 BERgrand=0.00000 aband=0.00 EG=11 t=0.0s
+[ 5/24 kodim05.png snr=10.0] noiseless=18.47 uncoded_soft=18.47 uncoded_hard=18.46 coded_hard=18.47 coded_soft=18.47 coded_hard_e=18.47 coded_soft_e=18.47 | BERch=0.0004 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 6/24 kodim06.png snr= 2.0] noiseless=21.37 uncoded_soft=21.11 uncoded_hard=20.89 coded_hard=20.84 coded_soft=20.95 coded_hard_e=20.77 coded_soft_e=20.88 | BERch=0.1021 BERgrand=0.10938 aband=0.28 EG=58147 t=0.1s
+[ 6/24 kodim06.png snr= 4.0] noiseless=21.39 uncoded_soft=21.26 uncoded_hard=21.22 coded_hard=21.10 coded_soft=21.14 coded_hard_e=21.03 coded_soft_e=21.05 | BERch=0.0573 BERgrand=0.06018 aband=0.14 EG=41702 t=0.1s
+[ 6/24 kodim06.png snr= 5.0] noiseless=21.41 uncoded_soft=21.33 uncoded_hard=21.24 coded_hard=21.31 coded_soft=21.31 coded_hard_e=21.22 coded_soft_e=21.23 | BERch=0.0375 BERgrand=0.02344 aband=0.09 EG=23750 t=0.1s
+[ 6/24 kodim06.png snr= 6.0] noiseless=21.35 uncoded_soft=21.30 uncoded_hard=21.25 coded_hard=21.28 coded_soft=21.29 coded_hard_e=21.23 coded_soft_e=21.23 | BERch=0.0237 BERgrand=0.00647 aband=0.03 EG=7850 t=0.0s
+[ 6/24 kodim06.png snr= 7.0] noiseless=21.38 uncoded_soft=21.35 uncoded_hard=21.35 coded_hard=21.38 coded_soft=21.38 coded_hard_e=21.37 coded_soft_e=21.37 | BERch=0.0129 BERgrand=0.00000 aband=0.00 EG=561 t=0.0s
+[ 6/24 kodim06.png snr= 8.0] noiseless=21.39 uncoded_soft=21.39 uncoded_hard=21.36 coded_hard=21.39 coded_soft=21.39 coded_hard_e=21.39 coded_soft_e=21.39 | BERch=0.0060 BERgrand=0.00000 aband=0.00 EG=14 t=0.0s
+[ 6/24 kodim06.png snr=10.0] noiseless=21.36 uncoded_soft=21.36 uncoded_hard=21.35 coded_hard=21.36 coded_soft=21.36 coded_hard_e=21.36 coded_soft_e=21.36 | BERch=0.0002 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 7/24 kodim07.png snr= 2.0] noiseless=22.87 uncoded_soft=22.19 uncoded_hard=21.65 coded_hard=21.41 coded_soft=21.52 coded_hard_e=21.17 coded_soft_e=21.24 | BERch=0.1023 BERgrand=0.11121 aband=0.23 EG=51296 t=0.1s
+[ 7/24 kodim07.png snr= 4.0] noiseless=22.95 uncoded_soft=22.70 uncoded_hard=22.57 coded_hard=22.37 coded_soft=22.42 coded_hard_e=22.05 coded_soft_e=22.14 | BERch=0.0551 BERgrand=0.05762 aband=0.24 EG=42878 t=0.1s
+[ 7/24 kodim07.png snr= 5.0] noiseless=22.96 uncoded_soft=22.69 uncoded_hard=22.54 coded_hard=22.74 coded_soft=22.75 coded_hard_e=22.50 coded_soft_e=22.50 | BERch=0.0375 BERgrand=0.03296 aband=0.05 EG=22300 t=0.1s
+[ 7/24 kodim07.png snr= 6.0] noiseless=22.83 uncoded_soft=22.69 uncoded_hard=22.65 coded_hard=22.82 coded_soft=22.82 coded_hard_e=22.70 coded_soft_e=22.71 | BERch=0.0225 BERgrand=0.00537 aband=0.00 EG=5377 t=0.0s
+[ 7/24 kodim07.png snr= 7.0] noiseless=22.82 uncoded_soft=22.79 uncoded_hard=22.72 coded_hard=22.82 coded_soft=22.82 coded_hard_e=22.82 coded_soft_e=22.82 | BERch=0.0125 BERgrand=0.00061 aband=0.00 EG=388 t=0.0s
+[ 7/24 kodim07.png snr= 8.0] noiseless=22.89 uncoded_soft=22.85 uncoded_hard=22.85 coded_hard=22.89 coded_soft=22.89 coded_hard_e=22.89 coded_soft_e=22.89 | BERch=0.0059 BERgrand=0.00000 aband=0.00 EG=8 t=0.0s
+[ 7/24 kodim07.png snr=10.0] noiseless=22.97 uncoded_soft=22.97 uncoded_hard=22.96 coded_hard=22.97 coded_soft=22.97 coded_hard_e=22.97 coded_soft_e=22.97 | BERch=0.0007 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 8/24 kodim08.png snr= 2.0] noiseless=19.66 uncoded_soft=19.12 uncoded_hard=18.50 coded_hard=18.42 coded_soft=18.52 coded_hard_e=18.29 coded_soft_e=18.38 | BERch=0.1008 BERgrand=0.10999 aband=0.22 EG=48079 t=0.1s
+[ 8/24 kodim08.png snr= 4.0] noiseless=19.65 uncoded_soft=19.51 uncoded_hard=19.17 coded_hard=19.14 coded_soft=19.19 coded_hard_e=18.95 coded_soft_e=19.11 | BERch=0.0593 BERgrand=0.06580 aband=0.14 EG=42787 t=0.1s
+[ 8/24 kodim08.png snr= 5.0] noiseless=19.64 uncoded_soft=19.41 uncoded_hard=19.29 coded_hard=19.34 coded_soft=19.37 coded_hard_e=19.24 coded_soft_e=19.28 | BERch=0.0397 BERgrand=0.02966 aband=0.12 EG=32802 t=0.1s
+[ 8/24 kodim08.png snr= 6.0] noiseless=19.66 uncoded_soft=19.54 uncoded_hard=19.53 coded_hard=19.62 coded_soft=19.62 coded_hard_e=19.62 coded_soft_e=19.63 | BERch=0.0215 BERgrand=0.00378 aband=0.01 EG=2416 t=0.0s
+[ 8/24 kodim08.png snr= 7.0] noiseless=19.72 uncoded_soft=19.65 uncoded_hard=19.65 coded_hard=19.72 coded_soft=19.72 coded_hard_e=19.70 coded_soft_e=19.70 | BERch=0.0132 BERgrand=0.00085 aband=0.00 EG=1628 t=0.0s
+[ 8/24 kodim08.png snr= 8.0] noiseless=19.69 uncoded_soft=19.67 uncoded_hard=19.64 coded_hard=19.69 coded_soft=19.69 coded_hard_e=19.69 coded_soft_e=19.69 | BERch=0.0044 BERgrand=0.00000 aband=0.00 EG=17 t=0.0s
+[ 8/24 kodim08.png snr=10.0] noiseless=19.72 uncoded_soft=19.72 uncoded_hard=19.72 coded_hard=19.72 coded_soft=19.72 coded_hard_e=19.72 coded_soft_e=19.72 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[ 9/24 kodim09.png snr= 2.0] noiseless=25.48 uncoded_soft=24.23 uncoded_hard=23.98 coded_hard=23.51 coded_soft=23.75 coded_hard_e=23.13 coded_soft_e=23.44 | BERch=0.1041 BERgrand=0.11060 aband=0.20 EG=52140 t=0.1s
+[ 9/24 kodim09.png snr= 4.0] noiseless=25.71 uncoded_soft=25.20 uncoded_hard=24.88 coded_hard=24.61 coded_soft=24.68 coded_hard_e=24.44 coded_soft_e=24.45 | BERch=0.0588 BERgrand=0.06335 aband=0.16 EG=49293 t=0.1s
+[ 9/24 kodim09.png snr= 5.0] noiseless=25.63 uncoded_soft=25.30 uncoded_hard=25.09 coded_hard=25.18 coded_soft=25.19 coded_hard_e=25.10 coded_soft_e=25.10 | BERch=0.0381 BERgrand=0.02954 aband=0.05 EG=24755 t=0.1s
+[ 9/24 kodim09.png snr= 6.0] noiseless=25.57 uncoded_soft=25.47 uncoded_hard=25.26 coded_hard=25.51 coded_soft=25.51 coded_hard_e=25.38 coded_soft_e=25.38 | BERch=0.0220 BERgrand=0.00342 aband=0.00 EG=4925 t=0.0s
+[ 9/24 kodim09.png snr= 7.0] noiseless=25.61 uncoded_soft=25.55 uncoded_hard=25.54 coded_hard=25.61 coded_soft=25.61 coded_hard_e=25.59 coded_soft_e=25.59 | BERch=0.0133 BERgrand=0.00000 aband=0.00 EG=96 t=0.0s
+[ 9/24 kodim09.png snr= 8.0] noiseless=25.53 uncoded_soft=25.54 uncoded_hard=25.48 coded_hard=25.53 coded_soft=25.53 coded_hard_e=25.49 coded_soft_e=25.49 | BERch=0.0065 BERgrand=0.00000 aband=0.00 EG=164 t=0.0s
+[ 9/24 kodim09.png snr=10.0] noiseless=25.64 uncoded_soft=25.63 uncoded_hard=25.64 coded_hard=25.64 coded_soft=25.64 coded_hard_e=25.64 coded_soft_e=25.64 | BERch=0.0010 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[10/24 kodim10.png snr= 2.0] noiseless=29.68 uncoded_soft=28.94 uncoded_hard=28.55 coded_hard=27.98 coded_soft=28.24 coded_hard_e=27.63 coded_soft_e=27.78 | BERch=0.1058 BERgrand=0.11316 aband=0.19 EG=47918 t=0.1s
+[10/24 kodim10.png snr= 4.0] noiseless=29.83 uncoded_soft=29.34 uncoded_hard=28.97 coded_hard=29.14 coded_soft=29.24 coded_hard_e=28.76 coded_soft_e=28.87 | BERch=0.0569 BERgrand=0.06482 aband=0.16 EG=42692 t=0.1s
+[10/24 kodim10.png snr= 5.0] noiseless=29.66 uncoded_soft=29.51 uncoded_hard=29.21 coded_hard=29.44 coded_soft=29.43 coded_hard_e=29.11 coded_soft_e=29.08 | BERch=0.0348 BERgrand=0.02820 aband=0.07 EG=23353 t=0.1s
+[10/24 kodim10.png snr= 6.0] noiseless=29.81 uncoded_soft=29.71 uncoded_hard=29.53 coded_hard=29.76 coded_soft=29.76 coded_hard_e=29.67 coded_soft_e=29.67 | BERch=0.0247 BERgrand=0.00989 aband=0.01 EG=5886 t=0.0s
+[10/24 kodim10.png snr= 7.0] noiseless=29.95 uncoded_soft=29.83 uncoded_hard=29.81 coded_hard=29.95 coded_soft=29.95 coded_hard_e=29.95 coded_soft_e=29.95 | BERch=0.0125 BERgrand=0.00000 aband=0.00 EG=475 t=0.0s
+[10/24 kodim10.png snr= 8.0] noiseless=29.67 uncoded_soft=29.65 uncoded_hard=29.65 coded_hard=29.67 coded_soft=29.67 coded_hard_e=29.67 coded_soft_e=29.67 | BERch=0.0067 BERgrand=0.00000 aband=0.00 EG=20 t=0.0s
+[10/24 kodim10.png snr=10.0] noiseless=29.67 uncoded_soft=29.68 uncoded_hard=29.67 coded_hard=29.67 coded_soft=29.67 coded_hard_e=29.67 coded_soft_e=29.67 | BERch=0.0006 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[11/24 kodim11.png snr= 2.0] noiseless=20.34 uncoded_soft=19.88 uncoded_hard=19.39 coded_hard=19.32 coded_soft=19.40 coded_hard_e=19.19 coded_soft_e=19.30 | BERch=0.1031 BERgrand=0.11304 aband=0.20 EG=55783 t=0.1s
+[11/24 kodim11.png snr= 4.0] noiseless=20.32 uncoded_soft=20.09 uncoded_hard=19.96 coded_hard=19.90 coded_soft=19.94 coded_hard_e=19.74 coded_soft_e=19.82 | BERch=0.0552 BERgrand=0.05835 aband=0.14 EG=46499 t=0.1s
+[11/24 kodim11.png snr= 5.0] noiseless=20.36 uncoded_soft=20.17 uncoded_hard=20.18 coded_hard=20.09 coded_soft=20.09 coded_hard_e=20.04 coded_soft_e=20.04 | BERch=0.0377 BERgrand=0.03748 aband=0.05 EG=23434 t=0.1s
+[11/24 kodim11.png snr= 6.0] noiseless=20.31 uncoded_soft=20.27 uncoded_hard=20.15 coded_hard=20.28 coded_soft=20.28 coded_hard_e=20.19 coded_soft_e=20.19 | BERch=0.0222 BERgrand=0.00500 aband=0.01 EG=4559 t=0.0s
+[11/24 kodim11.png snr= 7.0] noiseless=20.35 uncoded_soft=20.32 uncoded_hard=20.30 coded_hard=20.34 coded_soft=20.34 coded_hard_e=20.34 coded_soft_e=20.34 | BERch=0.0145 BERgrand=0.00098 aband=0.00 EG=760 t=0.0s
+[11/24 kodim11.png snr= 8.0] noiseless=20.35 uncoded_soft=20.32 uncoded_hard=20.27 coded_hard=20.35 coded_soft=20.35 coded_hard_e=20.35 coded_soft_e=20.35 | BERch=0.0055 BERgrand=0.00000 aband=0.00 EG=8 t=0.0s
+[11/24 kodim11.png snr=10.0] noiseless=20.28 uncoded_soft=20.27 uncoded_hard=20.28 coded_hard=20.28 coded_soft=20.28 coded_hard_e=20.28 coded_soft_e=20.28 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[12/24 kodim12.png snr= 2.0] noiseless=24.94 uncoded_soft=24.10 uncoded_hard=23.64 coded_hard=23.50 coded_soft=23.63 coded_hard_e=23.05 coded_soft_e=23.24 | BERch=0.1095 BERgrand=0.11365 aband=0.20 EG=49159 t=0.1s
+[12/24 kodim12.png snr= 4.0] noiseless=24.81 uncoded_soft=24.52 uncoded_hard=24.19 coded_hard=24.23 coded_soft=24.24 coded_hard_e=23.88 coded_soft_e=23.93 | BERch=0.0544 BERgrand=0.06079 aband=0.09 EG=41542 t=0.1s
+[12/24 kodim12.png snr= 5.0] noiseless=24.87 uncoded_soft=24.63 uncoded_hard=24.55 coded_hard=24.62 coded_soft=24.62 coded_hard_e=24.25 coded_soft_e=24.29 | BERch=0.0361 BERgrand=0.02930 aband=0.05 EG=23362 t=0.1s
+[12/24 kodim12.png snr= 6.0] noiseless=24.82 uncoded_soft=24.74 uncoded_hard=24.51 coded_hard=24.78 coded_soft=24.78 coded_hard_e=24.66 coded_soft_e=24.69 | BERch=0.0231 BERgrand=0.00586 aband=0.04 EG=8133 t=0.0s
+[12/24 kodim12.png snr= 7.0] noiseless=24.97 uncoded_soft=24.84 uncoded_hard=24.81 coded_hard=24.96 coded_soft=24.96 coded_hard_e=24.96 coded_soft_e=24.96 | BERch=0.0122 BERgrand=0.00098 aband=0.00 EG=700 t=0.0s
+[12/24 kodim12.png snr= 8.0] noiseless=24.87 uncoded_soft=24.79 uncoded_hard=24.82 coded_hard=24.87 coded_soft=24.87 coded_hard_e=24.87 coded_soft_e=24.87 | BERch=0.0065 BERgrand=0.00000 aband=0.00 EG=8 t=0.0s
+[12/24 kodim12.png snr=10.0] noiseless=24.85 uncoded_soft=24.85 uncoded_hard=24.85 coded_hard=24.85 coded_soft=24.85 coded_hard_e=24.85 coded_soft_e=24.85 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[13/24 kodim13.png snr= 2.0] noiseless=20.24 uncoded_soft=20.01 uncoded_hard=19.76 coded_hard=19.75 coded_soft=19.79 coded_hard_e=19.67 coded_soft_e=19.73 | BERch=0.0988 BERgrand=0.10779 aband=0.15 EG=44134 t=0.1s
+[13/24 kodim13.png snr= 4.0] noiseless=20.25 uncoded_soft=20.15 uncoded_hard=20.03 coded_hard=20.07 coded_soft=20.09 coded_hard_e=19.99 coded_soft_e=20.01 | BERch=0.0591 BERgrand=0.06006 aband=0.16 EG=42136 t=0.1s
+[13/24 kodim13.png snr= 5.0] noiseless=20.25 uncoded_soft=20.18 uncoded_hard=20.14 coded_hard=20.18 coded_soft=20.19 coded_hard_e=20.07 coded_soft_e=20.08 | BERch=0.0387 BERgrand=0.02405 aband=0.05 EG=19099 t=0.0s
+[13/24 kodim13.png snr= 6.0] noiseless=20.27 uncoded_soft=20.23 uncoded_hard=20.19 coded_hard=20.25 coded_soft=20.25 coded_hard_e=20.19 coded_soft_e=20.19 | BERch=0.0236 BERgrand=0.00647 aband=0.03 EG=7835 t=0.0s
+[13/24 kodim13.png snr= 7.0] noiseless=20.25 uncoded_soft=20.25 uncoded_hard=20.21 coded_hard=20.25 coded_soft=20.25 coded_hard_e=20.24 coded_soft_e=20.24 | BERch=0.0133 BERgrand=0.00000 aband=0.00 EG=1676 t=0.0s
+[13/24 kodim13.png snr= 8.0] noiseless=20.26 uncoded_soft=20.26 uncoded_hard=20.23 coded_hard=20.26 coded_soft=20.26 coded_hard_e=20.26 coded_soft_e=20.26 | BERch=0.0063 BERgrand=0.00000 aband=0.00 EG=31 t=0.0s
+[13/24 kodim13.png snr=10.0] noiseless=20.25 uncoded_soft=20.24 uncoded_hard=20.25 coded_hard=20.25 coded_soft=20.25 coded_hard_e=20.25 coded_soft_e=20.25 | BERch=0.0009 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[14/24 kodim14.png snr= 2.0] noiseless=19.83 uncoded_soft=19.31 uncoded_hard=18.75 coded_hard=18.80 coded_soft=18.96 coded_hard_e=18.57 coded_soft_e=18.79 | BERch=0.1031 BERgrand=0.10852 aband=0.26 EG=57990 t=0.1s
+[14/24 kodim14.png snr= 4.0] noiseless=19.88 uncoded_soft=19.66 uncoded_hard=19.51 coded_hard=19.39 coded_soft=19.40 coded_hard_e=19.31 coded_soft_e=19.32 | BERch=0.0527 BERgrand=0.05566 aband=0.07 EG=31234 t=0.1s
+[14/24 kodim14.png snr= 5.0] noiseless=19.90 uncoded_soft=19.72 uncoded_hard=19.61 coded_hard=19.71 coded_soft=19.72 coded_hard_e=19.58 coded_soft_e=19.60 | BERch=0.0356 BERgrand=0.02161 aband=0.04 EG=18566 t=0.1s
+[14/24 kodim14.png snr= 6.0] noiseless=19.91 uncoded_soft=19.83 uncoded_hard=19.76 coded_hard=19.90 coded_soft=19.90 coded_hard_e=19.79 coded_soft_e=19.78 | BERch=0.0276 BERgrand=0.00488 aband=0.00 EG=5266 t=0.0s
+[14/24 kodim14.png snr= 7.0] noiseless=19.87 uncoded_soft=19.85 uncoded_hard=19.81 coded_hard=19.85 coded_soft=19.85 coded_hard_e=19.85 coded_soft_e=19.85 | BERch=0.0137 BERgrand=0.00159 aband=0.00 EG=356 t=0.0s
+[14/24 kodim14.png snr= 8.0] noiseless=19.94 uncoded_soft=19.90 uncoded_hard=19.92 coded_hard=19.94 coded_soft=19.94 coded_hard_e=19.94 coded_soft_e=19.94 | BERch=0.0076 BERgrand=0.00000 aband=0.00 EG=9 t=0.0s
+[14/24 kodim14.png snr=10.0] noiseless=19.87 uncoded_soft=19.87 uncoded_hard=19.86 coded_hard=19.87 coded_soft=19.87 coded_hard_e=19.87 coded_soft_e=19.87 | BERch=0.0009 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[15/24 kodim15.png snr= 2.0] noiseless=24.80 uncoded_soft=24.11 uncoded_hard=23.03 coded_hard=23.52 coded_soft=23.66 coded_hard_e=23.07 coded_soft_e=23.30 | BERch=0.0988 BERgrand=0.10889 aband=0.24 EG=52669 t=0.1s
+[15/24 kodim15.png snr= 4.0] noiseless=24.86 uncoded_soft=24.42 uncoded_hard=24.23 coded_hard=24.18 coded_soft=24.16 coded_hard_e=23.87 coded_soft_e=23.89 | BERch=0.0557 BERgrand=0.06030 aband=0.22 EG=44252 t=0.1s
+[15/24 kodim15.png snr= 5.0] noiseless=24.78 uncoded_soft=24.43 uncoded_hard=24.22 coded_hard=24.43 coded_soft=24.45 coded_hard_e=24.34 coded_soft_e=24.35 | BERch=0.0337 BERgrand=0.02441 aband=0.08 EG=18986 t=0.1s
+[15/24 kodim15.png snr= 6.0] noiseless=24.82 uncoded_soft=24.75 uncoded_hard=24.45 coded_hard=24.80 coded_soft=24.80 coded_hard_e=24.69 coded_soft_e=24.69 | BERch=0.0210 BERgrand=0.00684 aband=0.00 EG=5396 t=0.0s
+[15/24 kodim15.png snr= 7.0] noiseless=24.67 uncoded_soft=24.64 uncoded_hard=24.56 coded_hard=24.67 coded_soft=24.67 coded_hard_e=24.68 coded_soft_e=24.68 | BERch=0.0127 BERgrand=0.00000 aband=0.00 EG=410 t=0.0s
+[15/24 kodim15.png snr= 8.0] noiseless=24.93 uncoded_soft=24.81 uncoded_hard=24.88 coded_hard=24.93 coded_soft=24.93 coded_hard_e=24.93 coded_soft_e=24.93 | BERch=0.0057 BERgrand=0.00000 aband=0.00 EG=10 t=0.0s
+[15/24 kodim15.png snr=10.0] noiseless=24.81 uncoded_soft=24.80 uncoded_hard=24.81 coded_hard=24.81 coded_soft=24.81 coded_hard_e=24.81 coded_soft_e=24.81 | BERch=0.0006 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[16/24 kodim16.png snr= 2.0] noiseless=25.65 uncoded_soft=25.19 uncoded_hard=24.95 coded_hard=24.82 coded_soft=24.92 coded_hard_e=24.49 coded_soft_e=24.53 | BERch=0.1034 BERgrand=0.11182 aband=0.22 EG=48046 t=0.1s
+[16/24 kodim16.png snr= 4.0] noiseless=25.61 uncoded_soft=25.57 uncoded_hard=25.31 coded_hard=25.14 coded_soft=25.15 coded_hard_e=24.96 coded_soft_e=25.01 | BERch=0.0560 BERgrand=0.06372 aband=0.16 EG=46547 t=0.1s
+[16/24 kodim16.png snr= 5.0] noiseless=25.65 uncoded_soft=25.51 uncoded_hard=25.46 coded_hard=25.51 coded_soft=25.52 coded_hard_e=25.33 coded_soft_e=25.33 | BERch=0.0354 BERgrand=0.02710 aband=0.05 EG=21585 t=0.1s
+[16/24 kodim16.png snr= 6.0] noiseless=25.65 uncoded_soft=25.62 uncoded_hard=25.55 coded_hard=25.64 coded_soft=25.66 coded_hard_e=25.62 coded_soft_e=25.62 | BERch=0.0214 BERgrand=0.00281 aband=0.03 EG=5000 t=0.0s
+[16/24 kodim16.png snr= 7.0] noiseless=25.69 uncoded_soft=25.67 uncoded_hard=25.65 coded_hard=25.69 coded_soft=25.69 coded_hard_e=25.66 coded_soft_e=25.66 | BERch=0.0131 BERgrand=0.00061 aband=0.00 EG=470 t=0.0s
+[16/24 kodim16.png snr= 8.0] noiseless=25.56 uncoded_soft=25.55 uncoded_hard=25.54 coded_hard=25.54 coded_soft=25.54 coded_hard_e=25.54 coded_soft_e=25.54 | BERch=0.0066 BERgrand=0.00073 aband=0.00 EG=37 t=0.0s
+[16/24 kodim16.png snr=10.0] noiseless=25.64 uncoded_soft=25.64 uncoded_hard=25.65 coded_hard=25.64 coded_soft=25.64 coded_hard_e=25.64 coded_soft_e=25.64 | BERch=0.0004 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[17/24 kodim17.png snr= 2.0] noiseless=25.86 uncoded_soft=25.25 uncoded_hard=24.58 coded_hard=24.55 coded_soft=24.69 coded_hard_e=24.27 coded_soft_e=24.44 | BERch=0.1066 BERgrand=0.11401 aband=0.19 EG=51329 t=0.1s
+[17/24 kodim17.png snr= 4.0] noiseless=25.80 uncoded_soft=25.47 uncoded_hard=25.14 coded_hard=25.12 coded_soft=25.16 coded_hard_e=24.99 coded_soft_e=25.08 | BERch=0.0588 BERgrand=0.06982 aband=0.20 EG=49176 t=0.1s
+[17/24 kodim17.png snr= 5.0] noiseless=25.83 uncoded_soft=25.66 uncoded_hard=25.47 coded_hard=25.52 coded_soft=25.54 coded_hard_e=25.31 coded_soft_e=25.34 | BERch=0.0367 BERgrand=0.02698 aband=0.05 EG=23015 t=0.1s
+[17/24 kodim17.png snr= 6.0] noiseless=25.86 uncoded_soft=25.70 uncoded_hard=25.63 coded_hard=25.78 coded_soft=25.78 coded_hard_e=25.61 coded_soft_e=25.62 | BERch=0.0233 BERgrand=0.00562 aband=0.00 EG=5746 t=0.0s
+[17/24 kodim17.png snr= 7.0] noiseless=25.90 uncoded_soft=25.88 uncoded_hard=25.76 coded_hard=25.90 coded_soft=25.90 coded_hard_e=25.87 coded_soft_e=25.87 | BERch=0.0134 BERgrand=0.00098 aband=0.00 EG=660 t=0.0s
+[17/24 kodim17.png snr= 8.0] noiseless=25.95 uncoded_soft=25.90 uncoded_hard=25.88 coded_hard=25.95 coded_soft=25.95 coded_hard_e=25.95 coded_soft_e=25.95 | BERch=0.0066 BERgrand=0.00000 aband=0.00 EG=9 t=0.0s
+[17/24 kodim17.png snr=10.0] noiseless=25.86 uncoded_soft=25.86 uncoded_hard=25.86 coded_hard=25.86 coded_soft=25.86 coded_hard_e=25.86 coded_soft_e=25.86 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[18/24 kodim18.png snr= 2.0] noiseless=21.04 uncoded_soft=20.46 uncoded_hard=20.09 coded_hard=20.15 coded_soft=20.23 coded_hard_e=19.87 coded_soft_e=19.95 | BERch=0.1018 BERgrand=0.11267 aband=0.19 EG=47639 t=0.1s
+[18/24 kodim18.png snr= 4.0] noiseless=21.05 uncoded_soft=20.80 uncoded_hard=20.74 coded_hard=20.53 coded_soft=20.53 coded_hard_e=20.39 coded_soft_e=20.45 | BERch=0.0573 BERgrand=0.05811 aband=0.12 EG=34123 t=0.1s
+[18/24 kodim18.png snr= 5.0] noiseless=20.97 uncoded_soft=20.82 uncoded_hard=20.72 coded_hard=20.81 coded_soft=20.80 coded_hard_e=20.72 coded_soft_e=20.75 | BERch=0.0378 BERgrand=0.03186 aband=0.05 EG=22052 t=0.1s
+[18/24 kodim18.png snr= 6.0] noiseless=20.89 uncoded_soft=20.84 uncoded_hard=20.68 coded_hard=20.89 coded_soft=20.89 coded_hard_e=20.83 coded_soft_e=20.83 | BERch=0.0212 BERgrand=0.00269 aband=0.00 EG=2144 t=0.0s
+[18/24 kodim18.png snr= 7.0] noiseless=20.95 uncoded_soft=20.90 uncoded_hard=20.88 coded_hard=20.95 coded_soft=20.95 coded_hard_e=20.95 coded_soft_e=20.95 | BERch=0.0112 BERgrand=0.00000 aband=0.00 EG=477 t=0.0s
+[18/24 kodim18.png snr= 8.0] noiseless=20.96 uncoded_soft=20.93 uncoded_hard=20.89 coded_hard=20.96 coded_soft=20.96 coded_hard_e=20.96 coded_soft_e=20.96 | BERch=0.0050 BERgrand=0.00000 aband=0.00 EG=12 t=0.0s
+[18/24 kodim18.png snr=10.0] noiseless=20.98 uncoded_soft=20.97 uncoded_hard=20.98 coded_hard=20.98 coded_soft=20.98 coded_hard_e=20.98 coded_soft_e=20.98 | BERch=0.0011 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[19/24 kodim19.png snr= 2.0] noiseless=21.30 uncoded_soft=20.92 uncoded_hard=20.71 coded_hard=20.72 coded_soft=20.78 coded_hard_e=20.57 coded_soft_e=20.61 | BERch=0.0986 BERgrand=0.10547 aband=0.18 EG=43757 t=0.1s
+[19/24 kodim19.png snr= 4.0] noiseless=21.34 uncoded_soft=21.17 uncoded_hard=21.28 coded_hard=21.05 coded_soft=21.10 coded_hard_e=20.99 coded_soft_e=21.06 | BERch=0.0598 BERgrand=0.06287 aband=0.18 EG=41721 t=0.1s
+[19/24 kodim19.png snr= 5.0] noiseless=21.37 uncoded_soft=21.28 uncoded_hard=21.28 coded_hard=21.27 coded_soft=21.27 coded_hard_e=21.11 coded_soft_e=21.12 | BERch=0.0349 BERgrand=0.02258 aband=0.03 EG=21528 t=0.1s
+[19/24 kodim19.png snr= 6.0] noiseless=21.37 uncoded_soft=21.31 uncoded_hard=21.27 coded_hard=21.35 coded_soft=21.35 coded_hard_e=21.33 coded_soft_e=21.33 | BERch=0.0237 BERgrand=0.00549 aband=0.00 EG=5061 t=0.0s
+[19/24 kodim19.png snr= 7.0] noiseless=21.32 uncoded_soft=21.30 uncoded_hard=21.29 coded_hard=21.32 coded_soft=21.32 coded_hard_e=21.30 coded_soft_e=21.30 | BERch=0.0142 BERgrand=0.00183 aband=0.00 EG=1487 t=0.0s
+[19/24 kodim19.png snr= 8.0] noiseless=21.41 uncoded_soft=21.36 uncoded_hard=21.36 coded_hard=21.41 coded_soft=21.41 coded_hard_e=21.41 coded_soft_e=21.41 | BERch=0.0066 BERgrand=0.00000 aband=0.00 EG=15 t=0.0s
+[19/24 kodim19.png snr=10.0] noiseless=21.36 uncoded_soft=21.35 uncoded_hard=21.36 coded_hard=21.36 coded_soft=21.36 coded_hard_e=21.36 coded_soft_e=21.36 | BERch=0.0007 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[20/24 kodim20.png snr= 2.0] noiseless=23.93 uncoded_soft=23.45 uncoded_hard=23.19 coded_hard=22.82 coded_soft=23.09 coded_hard_e=22.59 coded_soft_e=22.93 | BERch=0.1104 BERgrand=0.11780 aband=0.31 EG=57388 t=0.1s
+[20/24 kodim20.png snr= 4.0] noiseless=23.98 uncoded_soft=23.69 uncoded_hard=23.52 coded_hard=23.53 coded_soft=23.56 coded_hard_e=23.29 coded_soft_e=23.42 | BERch=0.0610 BERgrand=0.06812 aband=0.09 EG=44218 t=0.1s
+[20/24 kodim20.png snr= 5.0] noiseless=23.93 uncoded_soft=23.71 uncoded_hard=23.69 coded_hard=23.71 coded_soft=23.70 coded_hard_e=23.44 coded_soft_e=23.45 | BERch=0.0365 BERgrand=0.02856 aband=0.07 EG=22045 t=0.1s
+[20/24 kodim20.png snr= 6.0] noiseless=23.86 uncoded_soft=23.78 uncoded_hard=23.77 coded_hard=23.84 coded_soft=23.84 coded_hard_e=23.79 coded_soft_e=23.81 | BERch=0.0222 BERgrand=0.00488 aband=0.00 EG=2706 t=0.0s
+[20/24 kodim20.png snr= 7.0] noiseless=23.88 uncoded_soft=23.82 uncoded_hard=23.81 coded_hard=23.88 coded_soft=23.88 coded_hard_e=23.86 coded_soft_e=23.86 | BERch=0.0115 BERgrand=0.00000 aband=0.00 EG=314 t=0.0s
+[20/24 kodim20.png snr= 8.0] noiseless=23.83 uncoded_soft=23.83 uncoded_hard=23.83 coded_hard=23.83 coded_soft=23.83 coded_hard_e=23.83 coded_soft_e=23.83 | BERch=0.0059 BERgrand=0.00000 aband=0.00 EG=5 t=0.0s
+[20/24 kodim20.png snr=10.0] noiseless=23.86 uncoded_soft=23.86 uncoded_hard=23.86 coded_hard=23.86 coded_soft=23.86 coded_hard_e=23.86 coded_soft_e=23.86 | BERch=0.0007 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[21/24 kodim21.png snr= 2.0] noiseless=21.62 uncoded_soft=21.07 uncoded_hard=20.84 coded_hard=20.87 coded_soft=20.99 coded_hard_e=20.70 coded_soft_e=20.80 | BERch=0.1021 BERgrand=0.10681 aband=0.22 EG=51469 t=0.1s
+[21/24 kodim21.png snr= 4.0] noiseless=21.66 uncoded_soft=21.49 uncoded_hard=21.29 coded_hard=21.38 coded_soft=21.41 coded_hard_e=21.16 coded_soft_e=21.19 | BERch=0.0583 BERgrand=0.06055 aband=0.15 EG=40608 t=0.1s
+[21/24 kodim21.png snr= 5.0] noiseless=21.67 uncoded_soft=21.49 uncoded_hard=21.40 coded_hard=21.57 coded_soft=21.57 coded_hard_e=21.43 coded_soft_e=21.46 | BERch=0.0327 BERgrand=0.02100 aband=0.04 EG=17565 t=0.1s
+[21/24 kodim21.png snr= 6.0] noiseless=21.67 uncoded_soft=21.56 uncoded_hard=21.54 coded_hard=21.63 coded_soft=21.63 coded_hard_e=21.50 coded_soft_e=21.52 | BERch=0.0228 BERgrand=0.00195 aband=0.01 EG=3343 t=0.0s
+[21/24 kodim21.png snr= 7.0] noiseless=21.61 uncoded_soft=21.60 uncoded_hard=21.57 coded_hard=21.61 coded_soft=21.61 coded_hard_e=21.60 coded_soft_e=21.60 | BERch=0.0128 BERgrand=0.00000 aband=0.00 EG=988 t=0.0s
+[21/24 kodim21.png snr= 8.0] noiseless=21.62 uncoded_soft=21.62 uncoded_hard=21.59 coded_hard=21.62 coded_soft=21.62 coded_hard_e=21.62 coded_soft_e=21.62 | BERch=0.0065 BERgrand=0.00000 aband=0.00 EG=5 t=0.0s
+[21/24 kodim21.png snr=10.0] noiseless=21.66 uncoded_soft=21.65 uncoded_hard=21.66 coded_hard=21.66 coded_soft=21.66 coded_hard_e=21.66 coded_soft_e=21.66 | BERch=0.0005 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[22/24 kodim22.png snr= 2.0] noiseless=22.35 uncoded_soft=21.86 uncoded_hard=21.47 coded_hard=21.15 coded_soft=21.27 coded_hard_e=21.03 coded_soft_e=21.13 | BERch=0.1072 BERgrand=0.11365 aband=0.28 EG=59169 t=0.1s
+[22/24 kodim22.png snr= 4.0] noiseless=22.34 uncoded_soft=22.11 uncoded_hard=21.93 coded_hard=21.97 coded_soft=21.98 coded_hard_e=21.68 coded_soft_e=21.72 | BERch=0.0559 BERgrand=0.05640 aband=0.20 EG=41403 t=0.1s
+[22/24 kodim22.png snr= 5.0] noiseless=22.35 uncoded_soft=22.17 uncoded_hard=22.12 coded_hard=22.16 coded_soft=22.22 coded_hard_e=22.01 coded_soft_e=22.05 | BERch=0.0377 BERgrand=0.02539 aband=0.09 EG=20857 t=0.1s
+[22/24 kodim22.png snr= 6.0] noiseless=22.32 uncoded_soft=22.23 uncoded_hard=22.19 coded_hard=22.26 coded_soft=22.26 coded_hard_e=22.21 coded_soft_e=22.21 | BERch=0.0238 BERgrand=0.00769 aband=0.01 EG=7706 t=0.0s
+[22/24 kodim22.png snr= 7.0] noiseless=22.42 uncoded_soft=22.36 uncoded_hard=22.34 coded_hard=22.42 coded_soft=22.42 coded_hard_e=22.42 coded_soft_e=22.42 | BERch=0.0139 BERgrand=0.00000 aband=0.00 EG=201 t=0.0s
+[22/24 kodim22.png snr= 8.0] noiseless=22.43 uncoded_soft=22.37 uncoded_hard=22.40 coded_hard=22.43 coded_soft=22.43 coded_hard_e=22.43 coded_soft_e=22.43 | BERch=0.0055 BERgrand=0.00000 aband=0.00 EG=14 t=0.0s
+[22/24 kodim22.png snr=10.0] noiseless=22.40 uncoded_soft=22.38 uncoded_hard=22.39 coded_hard=22.40 coded_soft=22.40 coded_hard_e=22.40 coded_soft_e=22.40 | BERch=0.0007 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[23/24 kodim23.png snr= 2.0] noiseless=25.50 uncoded_soft=24.84 uncoded_hard=23.71 coded_hard=23.31 coded_soft=23.45 coded_hard_e=22.84 coded_soft_e=22.99 | BERch=0.1031 BERgrand=0.11084 aband=0.18 EG=45256 t=0.1s
+[23/24 kodim23.png snr= 4.0] noiseless=25.49 uncoded_soft=25.01 uncoded_hard=24.71 coded_hard=24.58 coded_soft=24.62 coded_hard_e=24.31 coded_soft_e=24.36 | BERch=0.0586 BERgrand=0.06421 aband=0.22 EG=50717 t=0.1s
+[23/24 kodim23.png snr= 5.0] noiseless=25.33 uncoded_soft=25.10 uncoded_hard=24.90 coded_hard=25.08 coded_soft=25.11 coded_hard_e=24.75 coded_soft_e=24.79 | BERch=0.0408 BERgrand=0.02441 aband=0.07 EG=20533 t=0.1s
+[23/24 kodim23.png snr= 6.0] noiseless=25.44 uncoded_soft=25.22 uncoded_hard=25.27 coded_hard=25.30 coded_soft=25.32 coded_hard_e=25.14 coded_soft_e=25.14 | BERch=0.0250 BERgrand=0.00903 aband=0.01 EG=7783 t=0.0s
+[23/24 kodim23.png snr= 7.0] noiseless=25.30 uncoded_soft=25.28 uncoded_hard=25.08 coded_hard=25.29 coded_soft=25.30 coded_hard_e=25.28 coded_soft_e=25.28 | BERch=0.0149 BERgrand=0.00085 aband=0.01 EG=1839 t=0.0s
+[23/24 kodim23.png snr= 8.0] noiseless=25.42 uncoded_soft=25.39 uncoded_hard=25.32 coded_hard=25.42 coded_soft=25.42 coded_hard_e=25.42 coded_soft_e=25.42 | BERch=0.0054 BERgrand=0.00000 aband=0.00 EG=6 t=0.0s
+[23/24 kodim23.png snr=10.0] noiseless=25.28 uncoded_soft=25.27 uncoded_hard=25.29 coded_hard=25.28 coded_soft=25.28 coded_hard_e=25.28 coded_soft_e=25.28 | BERch=0.0013 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+[24/24 kodim24.png snr= 2.0] noiseless=24.42 uncoded_soft=23.83 uncoded_hard=23.46 coded_hard=23.24 coded_soft=23.38 coded_hard_e=23.06 coded_soft_e=23.14 | BERch=0.0956 BERgrand=0.10510 aband=0.24 EG=46813 t=0.1s
+[24/24 kodim24.png snr= 4.0] noiseless=24.37 uncoded_soft=24.14 uncoded_hard=23.96 coded_hard=23.73 coded_soft=23.77 coded_hard_e=23.52 coded_soft_e=23.58 | BERch=0.0574 BERgrand=0.06299 aband=0.16 EG=42024 t=0.1s
+[24/24 kodim24.png snr= 5.0] noiseless=24.31 uncoded_soft=24.16 uncoded_hard=24.06 coded_hard=24.15 coded_soft=24.15 coded_hard_e=23.94 coded_soft_e=23.97 | BERch=0.0382 BERgrand=0.02466 aband=0.04 EG=21747 t=0.1s
+[24/24 kodim24.png snr= 6.0] noiseless=24.40 uncoded_soft=24.24 uncoded_hard=24.26 coded_hard=24.36 coded_soft=24.37 coded_hard_e=24.31 coded_soft_e=24.32 | BERch=0.0206 BERgrand=0.00623 aband=0.04 EG=7261 t=0.0s
+[24/24 kodim24.png snr= 7.0] noiseless=24.31 uncoded_soft=24.25 uncoded_hard=24.19 coded_hard=24.31 coded_soft=24.31 coded_hard_e=24.31 coded_soft_e=24.31 | BERch=0.0138 BERgrand=0.00000 aband=0.00 EG=107 t=0.0s
+[24/24 kodim24.png snr= 8.0] noiseless=24.40 uncoded_soft=24.38 uncoded_hard=24.35 coded_hard=24.40 coded_soft=24.40 coded_hard_e=24.40 coded_soft_e=24.40 | BERch=0.0067 BERgrand=0.00000 aband=0.00 EG=8 t=0.0s
+[24/24 kodim24.png snr=10.0] noiseless=24.40 uncoded_soft=24.40 uncoded_hard=24.39 coded_hard=24.40 coded_soft=24.40 coded_hard_e=24.40 coded_soft_e=24.40 | BERch=0.0004 BERgrand=0.00000 aband=0.00 EG=1 t=0.0s
+
+=== Summary (mean over 24 images), C=32, code crc:0x9eb2:128:112, 101s ===
+Es/N0         noiseless    uncoded_soft    uncoded_hard      coded_hard      coded_soft coded_hard_ebn0 coded_soft_ebn0
+2.0               23.44           22.83           22.30           22.23           22.36           21.98           22.12
+4.0               23.47           23.19           22.99           22.95           22.98           22.74           22.80
+5.0               23.46           23.27           23.15           23.23           23.24           23.05           23.07
+6.0               23.45           23.36           23.28           23.41           23.42           23.33           23.34
+7.0               23.45           23.41           23.37           23.45           23.45           23.44           23.44
+8.0               23.46           23.44           23.42           23.46           23.46           23.46           23.46
+10.0              23.44           23.44           23.44           23.44           23.44           23.44           23.44
+MS-SSIM:
+2.0              0.7990          0.7655          0.7327          0.7271          0.7365          0.7077          0.7180
+4.0              0.8001          0.7847          0.7761          0.7720          0.7739          0.7602          0.7643
+5.0              0.7996          0.7890          0.7845          0.7896          0.7899          0.7809          0.7819
+6.0              0.7998          0.7940          0.7920          0.7981          0.7982          0.7939          0.7941
+7.0              0.7995          0.7967          0.7958          0.7994          0.7994          0.7990          0.7990
+8.0              0.8006          0.7993          0.7986          0.8006          0.8006          0.8005          0.8005
+10.0             0.8004          0.8002          0.8003          0.8004          0.8004          0.8004          0.8004
+GRAND stats for coded_hard:
+  Es/N0  chan_snr  BERch     BERafter  BLERch  BLERafter aband  miscorr  avgQ    symbols/payload
+    2.0     2.00   0.10309  0.110825  1.000   0.9983    0.213  0.7849    50840  1.156
+    4.0     4.00   0.05709  0.061676  0.999   0.8328    0.154  0.6785    42621  1.156
+    5.0     5.00   0.03680  0.026855  0.995   0.4212    0.062  0.3592    22180  1.156
+    6.0     6.00   0.02281  0.005163  0.953   0.0884    0.012  0.0766     5410  1.156
+    7.0     7.00   0.01289  0.000422  0.822   0.0068    0.001  0.0062      658  1.156
+    8.0     8.00   0.00614  0.000031  0.537   0.0006    0.000  0.0006       19  1.156
+   10.0    10.00   0.00076  0.000000  0.099   0.0000    0.000  0.0000        1  1.156
+GRAND stats for coded_soft:
+  Es/N0  chan_snr  BERch     BERafter  BLERch  BLERafter aband  miscorr  avgQ    symbols/payload
+    2.0     2.00   0.10309  0.110825  1.000   0.9983    0.213  0.7849    50840  1.156
+    4.0     4.00   0.05709  0.061676  0.999   0.8328    0.154  0.6785    42621  1.156
+    5.0     5.00   0.03680  0.026855  0.995   0.4212    0.062  0.3592    22180  1.156
+    6.0     6.00   0.02281  0.005163  0.953   0.0884    0.012  0.0766     5410  1.156
+    7.0     7.00   0.01289  0.000422  0.822   0.0068    0.001  0.0062      658  1.156
+    8.0     8.00   0.00614  0.000031  0.537   0.0006    0.000  0.0006       19  1.156
+   10.0    10.00   0.00076  0.000000  0.099   0.0000    0.000  0.0000        1  1.156
+GRAND stats for coded_hard_ebn0:
+  Es/N0  chan_snr  BERch     BERafter  BLERch  BLERafter aband  miscorr  avgQ    symbols/payload
+    2.0     1.42   0.11870  0.125534  1.000   0.9994    0.203  0.7962    50264  1.156
+    4.0     3.42   0.07035  0.077901  0.999   0.9392    0.183  0.7562    47088  1.156
+    5.0     4.42   0.04712  0.046254  0.998   0.6841    0.124  0.5597    35690  1.156
+    6.0     5.42   0.03080  0.015066  0.988   0.2444    0.032  0.2128    13411  1.156
+    7.0     6.42   0.01826  0.002228  0.913   0.0389    0.005  0.0338     2603  1.156
+    8.0     7.42   0.00972  0.000092  0.702   0.0017    0.000  0.0017      104  1.156
+   10.0     9.42   0.00158  0.000000  0.189   0.0000    0.000  0.0000        1  1.156
+GRAND stats for coded_soft_ebn0:
+  Es/N0  chan_snr  BERch     BERafter  BLERch  BLERafter aband  miscorr  avgQ    symbols/payload
+    2.0     1.42   0.11870  0.125534  1.000   0.9994    0.203  0.7962    50264  1.156
+    4.0     3.42   0.07035  0.077901  0.999   0.9392    0.183  0.7562    47088  1.156
+    5.0     4.42   0.04712  0.046254  0.998   0.6841    0.124  0.5597    35690  1.156
+    6.0     5.42   0.03080  0.015066  0.988   0.2444    0.032  0.2128    13411  1.156
+    7.0     6.42   0.01826  0.002228  0.913   0.0389    0.005  0.0338     2603  1.156
+    8.0     7.42   0.00972  0.000092  0.702   0.0017    0.000  0.0017      104  1.156
+   10.0     9.42   0.00158  0.000000  0.189   0.0000    0.000  0.0000        1  1.156
+wrote results/C32_crc128_112_patches.jsonl
