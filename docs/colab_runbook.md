@@ -5,6 +5,11 @@ Colab Pro (A100/L4). Paths assume the repo is cloned to `/content/BitSemCom` and
 Drive is mounted at `/content/drive` with a folder `MyDrive/BitSemCom` holding the
 checkpoints and receiving the outputs.
 
+The notebook `BitSemCom_Colab.ipynb` at the repo root runs all of the steps below as cells: the GitHub
+token lives in Colab Secrets (`GH_TOKEN`), persistent files (models, data zips, runs, results) on Drive
+under `MyDrive/BitSemCom`, the code is cloned fresh from GitHub each session. Open it in Colab via
+File > Open notebook > GitHub (tick *include private repos*) or upload the file to Drive.
+
 ## 0. Setup (every session)
 
 ```python
