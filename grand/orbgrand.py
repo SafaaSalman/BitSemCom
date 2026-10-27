@@ -81,7 +81,11 @@ def _pack_columns(H):
 
 
 def _basic_schedule(n):
-    """Yield (W, w) in basic ORBGRAND order: increasing logistic weight W."""
+    """Yield (W, w, level) in basic ORBGRAND order: increasing logistic weight W.
+
+    `level` is the outer-loop counter of the MATLAB reference (W for basic ORBGRAND): the
+    reference checks the query budget once per level, not per pattern.
+    """
     W = 0
     W_max = n * (n + 1) // 2
     while W < W_max:
@@ -95,12 +99,13 @@ def _basic_schedule(n):
             w -= 1
         w_max = (math.isqrt(1 + 8 * W) - 1) // 2
         while w <= w_max:
-            yield W, w
+            yield W, w, W
             w += 1
 
 
 def _oneline_schedule(n, L):
-    """Yield (W, w) in 1-line ORBGRAND order. L: sorted ascending reliabilities."""
+    """Yield (W, w, level) in 1-line ORBGRAND order. L: sorted ascending reliabilities.
+    `level` is the total weight wt of the MATLAB reference (its outer loop)."""
     half = int(math.floor(n / 2 + 0.5))  # MATLAB round(n/2)
     beta = (L[half - 1] - L[0]) / (half - 1)
     if beta > 0:
@@ -117,7 +122,7 @@ def _oneline_schedule(n, L):
             if W < w * (w + 1) // 2:
                 break
             if w * (2 * n + 1 - w) >= 2 * W:  # feasibility guard against float error
-                yield W, w
+                yield W, w, wt
             w += 1
         wt += 1
 
@@ -130,9 +135,14 @@ class ORBGRAND:
     H : (n-k, n) binary array
     max_queries : abandon after this many codebook queries
     variant : '1line' (default, better at low SNR) or 'basic'
+    budget_mode : 'query' (default) stops exactly at max_queries, truncating the current
+        pattern group; 'level' reproduces the MATLAB reference, which checks the budget
+        only when it moves to the next weight level and therefore finishes the current
+        level even beyond max_queries. Use 'level' when comparing against bin_ORBGRAND*.m
+        bit for bit.
     """
 
-    def __init__(self, H, max_queries=10 ** 5, variant="1line"):
+    def __init__(self, H, max_queries=10 ** 5, variant="1line", budget_mode="query"):
         self.H = np.asarray(H, dtype=np.uint8) & 1
         self.r, self.n = self.H.shape
         self.cols = _pack_columns(self.H)
@@ -140,6 +150,9 @@ class ORBGRAND:
         if variant not in ("1line", "basic"):
             raise ValueError("variant must be '1line' or 'basic'")
         self.variant = variant
+        if budget_mode not in ("query", "level"):
+            raise ValueError("budget_mode must be 'query' or 'level'")
+        self.budget_mode = budget_mode
 
     def syndrome(self, bits):
         bits = np.asarray(bits, dtype=bool)
@@ -168,13 +181,21 @@ class ORBGRAND:
             schedule = _basic_schedule(n)
         else:
             schedule = _oneline_schedule(n, np.abs(llr)[order])
-        for W, w in schedule:
-            remaining = self.max_queries - n_guesses
-            if remaining <= 0:
-                break
-            z = landslide(W, w, n)
-            if z.shape[0] > remaining:
-                z = z[:remaining]
+        last_level = None
+        for W, w, level in schedule:
+            if self.budget_mode == "level":
+                if level != last_level:
+                    if n_guesses >= self.max_queries:
+                        break
+                    last_level = level
+                z = landslide(W, w, n)
+            else:
+                remaining = self.max_queries - n_guesses
+                if remaining <= 0:
+                    break
+                z = landslide(W, w, n)
+                if z.shape[0] > remaining:
+                    z = z[:remaining]
             synd = np.bitwise_xor.reduce(cols_sorted[z], axis=1)
             hit = np.flatnonzero(synd == s)
             if hit.size:

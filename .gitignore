@@ -26,3 +26,10 @@ Thumbs.db
 
 # Local test datasets (downloaded, not tracked)
 datasets/
+
+# Duffy reference code (non-commercial academic license, fetched by matlab/fetch_grand_matlab.sh)
+matlab/GRAND-MATLAB/
+# large verification / eval artefacts
+results/grand_verify/*.mat
+# example reconstructions written by evaluate.py --save_images
+results/images_*/

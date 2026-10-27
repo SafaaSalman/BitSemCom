@@ -27,7 +27,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from experiments.bitsemcom_io import (Metrics, decode_probs, encode_bits, load_images,  # noqa: E402
                                       load_model, qpsk_soft_original)
-from experiments.channel_coding import CodedLink, make_code, qpsk_channel  # noqa: E402
+from experiments.channel_coding import CodedLink, interleaver, make_code, qpsk_channel  # noqa: E402
 
 
 def to_tensor(p1_flat, like):
@@ -97,9 +97,7 @@ def main():
                     # numpy channel; '_il' interleaves the semantic bits over the transmission
                     rng_u = np.random.default_rng(seed + 2)
                     if path == "uncoded_soft_il":
-                        perm = np.random.default_rng(12345).permutation(bits_np.size)
-                        inv = np.empty_like(perm)
-                        inv[perm] = np.arange(bits_np.size)
+                        perm, inv = interleaver(bits_np.size)
                         llr_p, p1_p = qpsk_channel(bits_np[perm], snr, rng_u, args.channel, args.fade_block)
                         llr, p1f = llr_p[inv], p1_p[inv]
                     else:

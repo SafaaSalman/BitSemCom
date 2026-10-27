@@ -18,6 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from network.network import WITT, QPSK_soft  # noqa: E402
 from loss.distortion import MS_SSIM  # noqa: E402
+from experiments.metrics import psnr_255  # noqa: E402
 
 
 def find_checkpoint(C):
@@ -59,11 +60,24 @@ def make_config(C, device):
     return cfg
 
 
-def load_model(C, device="cuda", checkpoint=None, verbose=True):
+def build_model(C, device="cuda"):
+    """Fresh (randomly initialised) WITT + bit mapper with the DIV2K/Kodak configuration."""
     device = torch.device(device)
+    return WITT(make_args(C), make_config(C, device)).to(device)
+
+
+def load_model(C, device="cuda", checkpoint=None, verbose=True):
+    """checkpoint: path to a state_dict (.model) or a trainer checkpoint (ckpt_last.pt);
+    None -> newest Pretrain/*C{C}_*.model; 'none' -> random initialisation."""
+    device = torch.device(device)
+    net = build_model(C, device)
+    if checkpoint == "none":
+        net.eval()
+        return net
     ckpt = checkpoint or find_checkpoint(C)
-    net = WITT(make_args(C), make_config(C, device)).to(device)
-    sd = torch.load(ckpt, map_location=device)
+    sd = torch.load(ckpt, map_location=device, weights_only=False)
+    if isinstance(sd, dict) and "model" in sd and isinstance(sd["model"], dict):
+        sd = sd["model"]
     missing, unexpected = net.load_state_dict(sd, strict=False)
     if verbose:
         print("loaded %s  (missing=%d unexpected=%d)" % (os.path.relpath(ckpt, ROOT), len(missing), len(unexpected)))
@@ -119,7 +133,6 @@ class Metrics:
 
     @torch.no_grad()
     def __call__(self, img, recon):
-        mse = ((img * 255.0 - recon * 255.0) ** 2).mean().item()
-        psnr = 10 * np.log10(255.0 ** 2 / mse) if mse > 0 else 100.0
+        psnr = psnr_255(img, recon)
         ms = 1.0 - self.msssim(img, recon).mean().item()
         return psnr, ms
