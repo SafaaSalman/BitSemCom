@@ -33,3 +33,12 @@ matlab/GRAND-MATLAB/
 results/grand_verify/*.mat
 # example reconstructions written by evaluate.py --save_images
 results/images_*/
+
+# LaTeX build files (docs/latex)
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.out
+docs/latex/*.log

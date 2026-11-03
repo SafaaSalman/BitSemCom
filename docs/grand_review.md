@@ -1,6 +1,6 @@
 # Weekly report: C = 32 benchmark, GRAND-in-the-loop training, and GRAND at the receiver
 
-Safaa Salman · 28 October 2026 · progress since the meeting of 25 October · code on branch `grand-implementation`, detailed notes in [plan_v2.md](plan_v2.md), first-round results in [grand_results.md](grand_results.md).
+Safaa Salman · 28 October 2026 · progress since the meeting of 25 October · code on branch `grand-implementation`, how to rerun everything is in the [README](../README.md); first-round results in [grand_results.md](grand_results.md).
 
 ## Summary
 
@@ -161,7 +161,7 @@ This is the main sweep: for each model and condition, the coded receiver against
 
 *Bench model, PSNR in dB.*
 
-Hard decisions cost 1.7 dB at 0 dB AWGN and 2.7 dB at 0 dB fading, because a faded or noisy bit arrives as "probability 0.5" and the soft decoder treats it as unknown, while a hard decision throws that away. Two things follow. First, the earlier note in plan_v2 that "coded + ORBGRAND beats hard decisions by +1.6 dB (AWGN) and +2.8 dB (fading)" is correct but measures the soft fallback, not GRAND: at 0 dB 97% of the blocks are abandoned and arrive as soft values. Second, the honest hard-bit number is the first-round comparison of the code *with hard fallback* against hard decisions: +0.09 dB at 6 dB AWGN, +0.36 dB at 6 dB and +0.23 dB at 10 dB in fading (C = 16). That is the real gain GRAND offers a receiver that can only deliver bits.
+Hard decisions cost 1.7 dB at 0 dB AWGN and 2.7 dB at 0 dB fading, because a faded or noisy bit arrives as "probability 0.5" and the soft decoder treats it as unknown, while a hard decision throws that away. Two things follow. First, an earlier working note that "coded + ORBGRAND beats hard decisions by +1.6 dB (AWGN) and +2.8 dB (fading)" is correct but measures the soft fallback, not GRAND: at 0 dB 97% of the blocks are abandoned and arrive as soft values. Second, the honest hard-bit number is the first-round comparison of the code *with hard fallback* against hard decisions: +0.09 dB at 6 dB AWGN, +0.36 dB at 6 dB and +0.23 dB at 10 dB in fading (C = 16). That is the real gain GRAND offers a receiver that can only deliver bits.
 
 ## 6. Experiment 4: imperfect CSI
 

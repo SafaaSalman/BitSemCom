@@ -25,7 +25,7 @@ Each point was stopped after 40 block errors, so the agreement is within Monte C
 
 ### Conventions confirmed in the code
 
-* `QPSK_soft` uses positive LLR = bit 0, the same convention as Duffy's code. No sign flip is needed anywhere (the ChatGPT conversation in `convo.md` had this backwards).
+* `QPSK_soft` uses positive LLR = bit 0, the same convention as Duffy's code. No sign flip is needed anywhere.
 * The semantic decoder consumes P(bit=1) = sigmoid(-LLR), not bits and not LLRs.
 * The SNR argument of `QPSK_soft` is Es/N0 per QPSK symbol. Per-bit error rate is Q(sqrt(Es/N0)), so 6 dB gives 2.3 percent raw BER.
 
@@ -219,7 +219,7 @@ python experiments/channel_importance.py --C 16
 python experiments/summarize.py results/C16_crc128_112_patches.jsonl
 ```
 
-Kodak images are expected in `datasets/kodak_full` (24 PNGs) and `datasets/kodak_patches256` (centre crops); both folders are gitignored. Raw per-image results are in `results/*.jsonl`, run logs in `results/*.log`, markdown tables in `results/summary_*.md`.
+Kodak images are expected in `datasets/kodak_full` (24 PNGs) and `datasets/kodak_patches256` (centre crops); both folders are gitignored. Raw per-image results are in `results/*.jsonl`, markdown tables in `results/summary_*.md` (made with `experiments/summarize.py`). The README at the repository root has the full setup.
 
 ## 8. Licensing note
 
