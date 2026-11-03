@@ -1,45 +1,27 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[margin=2.3cm]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{lmodern}
-\usepackage{amsmath}
-\usepackage{microtype}
-\usepackage{parskip}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{longtable}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
-\usepackage{caption}
-\usepackage{float}
-\usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
-
-\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,keepspaces=true,
-        backgroundcolor=\color{gray!8},frame=single,framerule=0pt,xleftmargin=0.6em,xrightmargin=0.6em}
-\newcommand{\file}[1]{\path{#1}}
-\newcommand{\PSNR}{\mathrm{PSNR}}
-\setlist{nosep}
-
-\title{BitSemCom + GRAND: a guide to the repository}
-\author{Safaa Salman}
-\date{November 2026}
+\documentclass{article}
+\newcommand{\docheader}{Repository guide}
+\input{preamble}
 
 \begin{document}
-\maketitle
+\begin{center}
+{\LARGE \bfseries \color{deepred} BitSemCom + GRAND}\\[2pt]
+{\large \color{deepred} A guide to the repository: what is where, how it works, and how to run it}\\[6pt]
+{\normalsize Safaa Salman}\\[2pt]
+{\small \emph{Thesis working document}, November 2026, branch \texttt{grand-implementation}}
+\end{center}
 
-\begin{abstract}
+\vspace{4pt}
+\hrule
+\vspace{8pt}
+
+\begin{conceptbox}[title=What this document is]
 This document explains, in plain language, what is in the \texttt{BitSemCom} repository, how one image
 travels through the system, what every folder and script does, where the results are, and which
 conventions you must know before touching the code. It is written for students who join the project.
 The step-by-step commands are in the \texttt{README.md} at the repository root; this guide explains
 what those commands do. The numbers we measured are in the companion document
 \emph{BitSemCom + GRAND: results so far}.
-\end{abstract}
+\end{conceptbox}
 
 \tableofcontents
 
@@ -205,8 +187,8 @@ step is:
 \begin{enumerate}
 \item image $\to$ encoder $\to$ bit mapper $\to$ bits (the Gumbel layer passes a gradient through its own
 straight-through trick);
-\item channel: the uncoded torch QPSK (\texttt{channel\_uncoded}) or, with \texttt{-{}-grand}, the GRAND
-channel (\texttt{GrandChannel.transmit});
+\item channel: either the uncoded torch QPSK (\texttt{channel\_uncoded}) or, when \texttt{-{}-grand}
+is set, the GRAND channel described in the next subsection;
 \item $P(1)$ $\to$ decoder $\to$ MSE on the 0--255 scale $\to$ backward $\to$ AdamW step.
 \end{enumerate}
 
@@ -218,6 +200,7 @@ that evaluation uses (CRC encode, interleave, QPSK, channel, LLR, ORBGRAND with 
 fallback). The $P(1)$ values come back as a tensor of the same shape the uncoded channel would return,
 so the decoder cannot tell which channel it is attached to.
 
+\begin{conceptbox}[title=Why the gradient needs a trick]
 Encoding, interleaving and ORBGRAND are not differentiable. The trainer therefore pushes the same bits
 through the uncoded torch channel a second time (fresh noise, same settings) and combines the two:
 \[
@@ -226,10 +209,12 @@ p_1 \;=\; \operatorname{stopgrad}(p_1^{\text{GRAND}}) \;+\; \bigl(p_1^{\text{sof
 The value is exactly the GRAND output (the bracket is zero) while the gradient is the uncoded soft
 channel's Jacobian, so the encoder is trained by the same gradient path as in the benchmark run; only
 the forward signal the decoder sees differs (\texttt{-{}-grand\_grad soft}, the default;
-\texttt{identity} is plain straight-through). The block statistics of every step (abandoned,
-miscorrected, guesses, decode time) go to \file{log.csv}. In the run we made, about half of the blocks
-were abandoned and 1.5\% miscorrected, flat for all 30k steps, because with fixed-power QPSK the encoder
-has no handle on which blocks decode.
+\texttt{identity} is plain straight-through).
+\end{conceptbox}
+
+The block statistics of every step (abandoned, miscorrected, guesses, decode time) go to
+\file{log.csv}. In the run we made, about half of the blocks were abandoned and 1.5\% miscorrected, flat
+for all 30k steps, because with fixed-power QPSK the encoder has no handle on which blocks decode.
 
 \section{Evaluation}
 
@@ -313,9 +298,13 @@ budget; this mode is used everywhere numbers are compared with the reference.
 The port was validated twice: \file{grand/validate_duffy.py} reproduces the block error rates and
 average guess counts of the \texttt{RESULTS/*.mat} files shipped with GRAND-MATLAB within Monte Carlo
 noise; and \file{experiments/grand_verify.py} exports 740 real LLR blocks for a bit-exact comparison
-with the unmodified MATLAB functions (\file{matlab/verify_port.m}). The second check has not yet been
-run with a real MATLAB installation; the Octave attempt stopped on \texttt{cumsum(d,'reverse')}, which
-Octave lacks, and \file{matlab/octave_compat/cumsum.m} is an untested stand-in.
+with the unmodified MATLAB functions (\file{matlab/verify_port.m}).
+
+\begin{warningbox}{Not yet verified bit for bit}
+The second check has not yet been run with a real MATLAB installation. The Octave attempt stopped on
+\texttt{cumsum(d,'reverse')}, which Octave lacks; \file{matlab/octave_compat/cumsum.m} is an untested
+stand-in. Until this is done, every number in the reports comes from the Python port.
+\end{warningbox}
 
 \section{Data, checkpoints and results}
 \label{sec:results}
@@ -343,6 +332,7 @@ with its figures in \file{docs/figures/grand_review/}), plus this guide and the 
 
 \section{Conventions you must know}
 
+\begin{importantnote}[title=Conventions used everywhere in the code]
 \begin{itemize}
 \item \textbf{LLR sign.} Positive LLR means bit 0, in BitSemCom, in Duffy's code and in ours. The
 decoder consumes $P(\text{bit}=1)=\sigma(-\mathrm{LLR})$, never bits and never LLRs.
@@ -358,6 +348,7 @@ larger budget turns abandonments into miscorrections.
 \item \textbf{Code specs} are strings: \texttt{crc:0x9eb2:128:112} (CRC polynomial, $n$, $k$),
 \texttt{rlc:128:104:0} (random linear code, $n$, $k$, seed).
 \end{itemize}
+\end{importantnote}
 
 \section{The most useful commands}
 

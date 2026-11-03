@@ -1,0 +1,104 @@
+% Shared preamble of the BitSemCom + GRAND documents (Safaa's report template).
+% Each document sets \docheader (the right-hand running head) before \input{preamble}.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{sectsty}
+\usepackage{tabularx}
+\usepackage{mathptmx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, shapes.geometric, fit, backgrounds}
+
+% Page layout
+\geometry{margin=1in}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{{BitSemCom + GRAND}}
+\fancyhead[R]{\docheader}
+\fancyfoot[C]{\thepage}
+
+% Define colors
+\definecolor{lightblue}{RGB}{240, 248, 255}
+\definecolor{lightbeige}{RGB}{255, 250, 240}
+\definecolor{lightpink}{RGB}{255, 230, 230}
+\definecolor{deepred}{RGB}{128, 0, 0}
+\definecolor{mygray}{RGB}{245, 245, 245}
+\definecolor{darkblue}{RGB}{30, 60, 120}
+\definecolor{lightgreen}{RGB}{232, 245, 233}
+\definecolor{darkgreen}{RGB}{27, 94, 32}
+\definecolor{codebg}{RGB}{245, 245, 245}
+\definecolor{keyword}{RGB}{0, 0, 180}
+\definecolor{sqlstring}{RGB}{163, 21, 21}
+\definecolor{sqlcomment}{RGB}{0, 128, 0}
+
+% Define subsubsubsection command
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+% Title styling
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{deepred}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\Large\bfseries\color{deepred}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\large\bfseries\color{deepred}}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}
+  {\normalfont\normalsize\bfseries\color{deepred}}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}
+  {\normalfont\normalsize\bfseries\color{deepred}}{\thesubparagraph}{1em}{}
+
+\sectionfont{\color{deepred}}
+\subsectionfont{\color{deepred}}
+\subsubsectionfont{\color{deepred}}
+
+% Reduce spacing
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\setlength{\parskip}{4pt}
+
+% Important Note box
+\newtcolorbox{importantnote}[1][]{
+    colback=lightbeige, colframe=deepred, fonttitle=\bfseries, title=Important Note, sharp corners, boxrule=0.2mm, width=\textwidth, #1
+}
+
+% Box for each concept subsection
+\newtcolorbox{conceptbox}[1][]{
+    colback=lightblue, colframe=darkblue, fonttitle=\bfseries, boxrule=0.2mm, sharp corners, width=\textwidth, #1
+}
+
+% Box for findings
+\newtcolorbox{findingbox}[2][]{
+    colback=lightgreen, colframe=darkgreen, fonttitle=\bfseries, boxrule=0.2mm, sharp corners, width=\textwidth, title=#2, #1
+}
+
+% Warning box
+\newtcolorbox{warningbox}[2][]{
+    colback=lightpink, colframe=deepred, fonttitle=\bfseries, boxrule=0.2mm, sharp corners, width=\textwidth, title=#2, #1
+}
+
+% --- additions used by both documents ---
+\hypersetup{hidelinks}
+\graphicspath{{../figures/grand_review/}{../../results/figures/}}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,keepspaces=true,
+        backgroundcolor=\color{codebg},frame=single,framerule=0pt,xleftmargin=0.6em,xrightmargin=0.6em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\dB}{\,\mathrm{dB}}
+\setlength{\tabcolsep}{4.5pt}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep}

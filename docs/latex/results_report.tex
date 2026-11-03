@@ -1,33 +1,20 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[margin=2.3cm]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{lmodern}
-\usepackage{microtype}
-\usepackage{parskip}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{xcolor}
-\usepackage{caption}
-\usepackage{float}
-\usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
-\graphicspath{{../figures/grand_review/}{../../results/figures/}}
-\captionsetup{font=small,labelfont=bf}
-\setlength{\tabcolsep}{4.5pt}
-\newcommand{\file}[1]{\path{#1}}
-\newcommand{\dB}{\,\mathrm{dB}}
-\setlist{nosep}
-
-\title{BitSemCom + GRAND: results so far}
-\author{Safaa Salman}
-\date{November 2026}
+\documentclass{article}
+\newcommand{\docheader}{Results so far}
+\input{preamble}
 
 \begin{document}
-\maketitle
+\begin{center}
+{\LARGE \bfseries \color{deepred} BitSemCom + GRAND}\\[2pt]
+{\large \color{deepred} Results so far: does a channel code decoded with GRAND help a semantic image system?}\\[6pt]
+{\normalsize Safaa Salman}\\[2pt]
+{\small \emph{Thesis working document}, November 2026, branch \texttt{grand-implementation}}
+\end{center}
 
-\begin{abstract}
+\vspace{4pt}
+\hrule
+\vspace{8pt}
+
+\begin{findingbox}{The answer in one paragraph}
 Does an error-correcting code decoded with GRAND improve the image quality of a bit-level semantic
 communication system? We measured it in two rounds on the BitSemCom models: first with the existing
 checkpoints for $C=16$, 32 and 64 bits per token, then with a properly retrained $C=32$ model and a
@@ -39,7 +26,7 @@ reason is that the semantic decoder already absorbs scattered bit errors, so the
 left for a code to repair. The one measurable win is for receivers that can only deliver hard bits. This
 document explains the experiments and the numbers in plain language; the repository guide explains the
 code.
-\end{abstract}
+\end{findingbox}
 
 \tableofcontents
 
@@ -56,8 +43,8 @@ ORBGRAND cannot decode a block within its guess budget it gives up (``abandons''
 passed on as plain soft values, exactly as without the code. So the code can only help where ORBGRAND
 decodes, and can only hurt when it ``repairs'' a block to a wrong codeword (a \emph{miscorrection}).
 
-\textbf{Short answer.} The code plus GRAND does not improve image quality in any setting that matters:
-
+\begin{findingbox}{Short answer}
+The code plus GRAND does not improve image quality in any setting that matters:
 \begin{itemize}
 \item AWGN: at most $+0.08\dB$ PSNR (at 6 dB SNR); nothing or a small loss below 6 dB. The code
 also spends 16\% more channel uses, worth about 0.2 dB if spent on more semantic bits instead.
@@ -68,6 +55,7 @@ with every receiver, including with perfect bits. It is simply a worse autoencod
 \item The one real win: receivers that can only deliver hard bits (0 or 1). There the code plus GRAND
 gained $+0.1$ to $+0.4\dB$ in round 1.
 \end{itemize}
+\end{findingbox}
 
 \section{What was measured and how}
 
@@ -152,6 +140,7 @@ on semantic bits. Every coding gain measured is smaller than that.
 
 \subsection{Why the gain is so small: diagnostics}
 
+\begin{conceptbox}[title=Four facts about the semantic decoder]
 \begin{itemize}
 \item \textbf{The decoder tolerates about 5\% random bit noise.} The bit mapper is stochastic:
 re-sampling it flips about 5\% of the bits and changes PSNR by nothing (22.23 vs 22.23 dB). The channel
@@ -165,6 +154,7 @@ not need; an interleaver breaks up clusters, which it does need.
 \item \textbf{The SNR conditioning of the backbone is inert} in these checkpoints: telling the decoder
 ``the bits are clean'' after GRAND changes nothing.
 \end{itemize}
+\end{conceptbox}
 
 \begin{table}[H]
 \centering\small
@@ -353,11 +343,13 @@ interleaver + code, soft fallback & 22.66 & 24.15 & 21.89 & 23.54 \\
 \caption{Bench model, PSNR in dB.}
 \end{table}
 
+\begin{importantnote}[title=A number to quote carefully]
 Hard decisions cost 1.7 dB at 0 dB AWGN and 2.7 dB at 0 dB fading. The soft-fallback coded receiver
 beats the hard receiver by the same amounts, but that measures soft versus hard input, not GRAND: at
 0 dB 97\% of the blocks are abandoned and arrive as soft values. The honest hard-bit number is the round-1
 comparison of the code \emph{with hard fallback} against hard decisions: $+0.09\dB$ at 6 dB AWGN,
 $+0.36$ and $+0.23\dB$ at 6 and 10 dB in fading.
+\end{importantnote}
 
 \subsection{Imperfect channel knowledge}
 
@@ -460,10 +452,12 @@ rate, not the decoder.
 
 \subsection{The MATLAB reference check}
 
+\begin{warningbox}{Open item: the bit-exact check}
 The decoder used everywhere is our Python port of Ken Duffy's ORBGRAND. It reproduced the block error
 rates published with GRAND-MATLAB in round 1, and a test set of 740 real LLR blocks is exported for a
 bit-exact comparison with the unmodified MATLAB functions. That comparison has not been run yet: it
 needs a MATLAB session, and the Octave attempt failed on a MATLAB-only \texttt{cumsum} option.
+\end{warningbox}
 
 \section{What the results mean}
 
@@ -479,8 +473,9 @@ block decodability; in our run it did not help through the decoder either.
 For the thesis this is a clean negative result with a mechanism behind it: for a bit-level semantic
 system with a soft-input decoder, a high-rate code plus GRAND does not improve image quality on AWGN or
 fading channels, because the decoder already absorbs scattered bit errors and the interleaver handles
-clustered ones. Three framings have evidence behind them:
+clustered ones.
 
+\begin{findingbox}{Three framings with evidence behind them}
 \begin{enumerate}
 \item GRAND for receivers that only deliver hard bits ($+0.1$ to $+0.4\dB$ in round 1), a realistic
 deployment constraint.
@@ -489,9 +484,11 @@ average SNR in fading, for bit-exact delivery.
 \item GRAND's immunity to SNR misestimates (its guessing order depends only on LLR ranking), which only
 pays off where GRAND actually decodes.
 \end{enumerate}
+\end{findingbox}
 
 \section{Open items and next steps}
 
+\begin{importantnote}[title={Next steps, cheapest first}]
 \begin{itemize}
 \item Run the bit-exact check against Duffy's MATLAB code (export ready; needs MATLAB).
 \item Fine-tune only the decoder of the benchmark with GRAND in the loop (encoder frozen): no gradient
@@ -503,6 +500,7 @@ round 1) or soft-output GRAND, which hands the decoder probabilities instead of 
 \item Use ORBGRAND's abandonment flag to retransmit failed blocks (HARQ); the flag is already logged.
 \item Evaluate CLIP on a few hundred images if it is kept as the semantic metric.
 \end{itemize}
+\end{importantnote}
 
 \section*{Where the numbers come from}
 
