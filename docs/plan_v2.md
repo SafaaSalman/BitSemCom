@@ -105,3 +105,57 @@ interleaver existed; `run_grand.py` now interleaves by default (use `--no_interl
   forkserver/spawn (never fork after CUDA init).
 * **Caveat for runbook question 1.** `stage2` (-3..6 dB) and `bench` (0..10 dB) differ in training
   SNR range, not only in schedule.
+
+## 7. Outcome of the Colab runs (2026-10-27/28)
+
+Both models trained for the full 30k steps (bench on an L4 at 0.70 s/step, GRAND-in-the-loop on an A100 at
+0.47 s/step). Validation (Kodak patches, mean of the model's own receiver over 0/3/6/10 dB): bench 23.645 at
+step 30000, GRAND run 23.448 at step 27000; both start at 23.07. The primary sweep is `results/eval_C32.jsonl`
+(budget 2000 = training budget; 3 models x 5 conditions x 7 SNRs x 5 receivers x 24 Kodak images), the
+secondary one `results/eval_C32_b1e5.jsonl`. Every difference below is paired over the 24 images (same image,
+same bits, same noise); s.e. is the standard error of the paired mean.
+
+* **Question 1 (schedule).** bench beats stage2 by +0.75 dB noiseless and by +0.27 / +0.59 / +0.75 dB with
+  the uncoded soft receiver at 0 / 4 / 8 dB AWGN (s.e. 0.03-0.06). The one receiver where bench loses is
+  uncoded *hard* at 0 dB AWGN (-0.35 dB): stage2 was trained down to -3 dB and tolerates harsher inputs.
+* **Question 2 (GRAND in the loop): no.** From 2 dB on the GRAND-trained model is worse than bench by
+  0.17-0.25 dB at every SNR, in every condition and with every receiver, its own coded receiver included
+  (AWGN 6 dB: 23.94 vs 24.15 dB; s.e. 0.02-0.04). At 0 dB the gap shrinks to 0.09 dB (AWGN) and is not
+  significant in fading (+0.11, s.e. 0.10). Noiseless it is 24.01 vs 24.22 dB, so it is a worse autoencoder,
+  not a mis-specialised one. Its coding gain equals bench's (coded minus uncoded+interleaver at 6 dB AWGN:
+  +0.10 vs +0.08 dB, s.e. 0.02), so the decoder did not learn to exploit GRAND's output either. Its training
+  MSE stays about 3 % above bench's for the whole run although half of its blocks arrive error-free, which
+  points at the gradient surrogate (forward = GRAND output, backward = soft-channel Jacobian). Abandonment
+  and miscorrection during training are flat (0.5 and 0.015): a fixed-power QPSK mapper gives the encoder no
+  handle on block decodability, so any benefit could only have come from the decoder side.
+* **Coding gain at the training budget (2000), bench model, against uncoded + interleaver.** AWGN: +0.08 dB
+  at 6 dB (20/24 images), +0.04 at 8 dB, -0.07 at 2 dB (97 % of the blocks abandoned, 3 % miscorrected),
+  zero elsewhere. Block fading: -0.20 / -0.15 / -0.11 dB at 0 / 2 / 4 dB, zero at 6-8 dB, +0.05 / +0.09 at
+  10 / 12 dB (abandonment falls to 0.68 / 0.32 there). With channel-estimate error (fade8_h0.1) never
+  positive beyond its s.e. Against *plain* uncoded the fading numbers read +0.06 to +0.26 dB: that is the
+  interleaver, not the code.
+* **Interleaver alone (`uncoded_soft_il`).** Block fading: +0.26 / +0.41 / +0.29 / +0.09 / +0.13 dB at
+  0 / 2 / 4 / 6 / 8 dB (bench), +0.23 to +0.47 dB over the whole range with channel-estimate error; AWGN:
+  nothing. The interleaved uncoded receiver also loses less to the estimate error than the plain one
+  (-0.36 vs -0.65 dB at 8 dB).
+* **Hard-bit receiver.** coded+ORBGRAND beats uncoded hard decisions by +1.6 dB (AWGN 0 dB), +2.8 dB
+  (fading 0 dB), +0.2 dB (AWGN 6 dB) for bench: the first-round conclusion stands that the lever is the
+  receiver's bit representation, not the code.
+* **Imperfect CSI.** An SNR over- / under-estimate of 3 dB costs the soft receiver 0.3 / 0.7 dB at 0 dB
+  (bench) and nothing from 8 dB on; the coded receiver pays the same below 6 dB (abandoned blocks fall back
+  to the same soft values) and nothing from 6 dB on. bench is more sensitive than stage2 (0.68 vs 0.32 dB at
+  0 dB, under-estimate). Channel-estimate error (var 0.1) in fading costs 0.3-0.7 dB (uncoded soft) and
+  0.3-0.5 dB (coded), growing with SNR.
+* **MS-SSIM, LPIPS, CLIP.** MS-SSIM and LPIPS agree with PSNR in sign wherever PSNR moves by more than
+  0.03 dB (6 dB AWGN: MS-SSIM +0.004, LPIPS -0.003; fading 0-4 dB: MS-SSIM -0.005 to -0.009, LPIPS +0.005 to
+  +0.012 at 0 dB and within s.e. at 2-4 dB). CLIP differences sit inside their s.e. (0.01) everywhere:
+  24 images are too few for it.
+* **Budget 1e5.** Harmful below 6 dB AWGN (-0.4 to -1.3 dB for bench) and below 10 dB fading (70-80 %
+  miscorrected blocks); +0.05 to +0.1 dB at 6-8 dB AWGN and 12 dB fading. Same picture as the first round.
+* **Run notes.** The browser disconnected during cell 9, so its output is missing from the saved notebook,
+  but the JSONL on Drive is complete (the notebook now tees the console output to `results/eval_C32.log`).
+  The Octave check failed inside `landslide.m` on `cumsum(d,'reverse')` (Octave has no direction flag;
+  `matlab/octave_compat` supplies one, untested). The push failed again (token without Contents write).
+* **Cheapest next experiment for question 2.** Fine-tune only the decoder of the bench model with GRAND in
+  the loop (needs an encoder-freeze option in the trainer). No gradient surrogate is involved, so it tests
+  directly whether a decoder can profit from GRAND's output statistics.

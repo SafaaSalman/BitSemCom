@@ -1,0 +1,37 @@
+[
+ {
+  "channel": "awgn",
+  "snr": 3.0,
+  "fade_block": 0,
+  "snr_err_db": 0.0,
+  "h_err_var": 0.0
+ },
+ {
+  "channel": "awgn",
+  "snr": 5.0,
+  "fade_block": 0,
+  "snr_err_db": 0.0,
+  "h_err_var": 0.0
+ },
+ {
+  "channel": "awgn",
+  "snr": 7.0,
+  "fade_block": 0,
+  "snr_err_db": 0.0,
+  "h_err_var": 0.0
+ },
+ {
+  "channel": "blockfading",
+  "snr": 10.0,
+  "fade_block": 8,
+  "snr_err_db": 0.0,
+  "h_err_var": 0.0
+ },
+ {
+  "channel": "blockfading",
+  "snr": 10.0,
+  "fade_block": 8,
+  "snr_err_db": 0.0,
+  "h_err_var": 0.1
+ }
+]
