@@ -4,6 +4,7 @@ Figures from evaluate.py output (results/*.jsonl):
   quality_<condition>.png   metric vs Es/N0, one panel per metric; colour = model (fixed order),
                             line style + marker = receiver; noiseless ceiling as a thin line
   gain_<metric>.png         coded_soft minus uncoded_soft per condition (does GRAND help?), colour = model
+  gain_<metric>_vs_il.png   coded_soft minus uncoded_soft_il (same interleaver, no code): the coding gain alone
   grand_<condition>.png     BLER after decoding / abandoned / miscorrected (log) and average queries vs Es/N0
   summary.md                tables (mean over images) for every model x condition x path
 
@@ -96,8 +97,11 @@ def main():
         fig.savefig(os.path.join(args.out, "quality_%s%s.png" % (cond, tag)))
         plt.close(fig)
 
-    # coding gain per condition (coded_soft - uncoded_soft)
-    if "coded_soft" in paths and "uncoded_soft" in paths:
+    # coding gain per condition: coded_soft minus a reference receiver (plain uncoded, and uncoded with the same
+    # interleaver but no code, which isolates the coding gain from the interleaving gain in fading)
+    for ref, suffix, ref_label in (("uncoded_soft", "", "uncoded"), ("uncoded_soft_il", "_vs_il", "uncoded + interleaver")):
+        if "coded_soft" not in paths or ref not in paths:
+            continue
         for metric in metrics:
             t = tables[metric]
             fig, axes = plt.subplots(1, len(conds), figsize=(3.4 * len(conds), 3.0), squeeze=False, sharey=True)
@@ -105,12 +109,12 @@ def main():
                 ax = axes[0, ci_c]
                 ax.axhline(0, color=INK3, lw=0.8)
                 for ci, model in enumerate(models):
-                    y = [t.get((model, cond, s, "coded_soft"), np.nan) - t.get((model, cond, s, "uncoded_soft"), np.nan) for s in snrs]
+                    y = [t.get((model, cond, s, "coded_soft"), np.nan) - t.get((model, cond, s, ref), np.nan) for s in snrs]
                     ax.plot(snrs, y, color=color(ci), marker="o", label=model)
-                finish(ax, "Es/N0 (dB)", ("%s gain of coded+ORBGRAND over uncoded" % METRIC_LABEL.get(metric, metric)) if ci_c == 0 else None,
+                finish(ax, "Es/N0 (dB)", ("%s gain of coded+ORBGRAND over %s" % (METRIC_LABEL.get(metric, metric), ref_label)) if ci_c == 0 else None,
                        cond, legend=ci_c == 0)
             fig.tight_layout()
-            fig.savefig(os.path.join(args.out, "gain_%s%s.png" % (metric, tag)))
+            fig.savefig(os.path.join(args.out, "gain_%s%s%s.png" % (metric, suffix, tag)))
             plt.close(fig)
 
     # GRAND behaviour per condition

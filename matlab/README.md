@@ -49,10 +49,16 @@ its author as instructional, not optimized), so use it for the final sweeps, wit
 ## 4. Octave on Colab
 
 ```
-!apt-get -qq install octave
+!apt-get -qq update && apt-get -qq install -y octave
 !bash matlab/fetch_grand_matlab.sh
 !python experiments/grand_verify.py export && python experiments/grand_verify.py run --backend octave
 ```
 
-Duffy's functions only use basic MATLAB (`sort`, `mod`, `cumsum`, `circshift`), which
-Octave implements identically.
+Duffy's functions use basic MATLAB (`sort`, `mod`, `cumsum`, `circshift`) with one
+MATLAB-only call: `landslide.m` computes the accumulated drops with `cumsum(d,'reverse')`,
+and GNU Octave's `cumsum` has no direction flag (Octave 8.4 stops with
+"cumsum: unrecognized string argument"). `matlab/octave_compat/cumsum.m` is a stand-in that
+accepts the flag (`flip(cumsum(flip(x)))`) and defers to the builtin otherwise. The Python
+backend puts that folder on the path only when the engine is Octave, so Duffy's files are
+never edited and MATLAB keeps its own `cumsum`. To run `verify_port.m` under Octave by hand,
+add it yourself: `addpath('octave_compat')`.

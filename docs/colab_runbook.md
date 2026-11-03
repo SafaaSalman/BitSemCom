@@ -56,13 +56,16 @@ Produces `results/figures/llr_<condition>.png`, `llr_summary.png/.md`, `bitmappe
 python train_bitsemcom.py --C 32 --init Pretrain/BitSemCom_C32_stage2_ep480.model \
     --train_dir datasets/DIV2K_train_HR --val_dir datasets/kodak_patches256 \
     --steps 30000 --batch 16 --lr 1e-4 --min_lr 1e-6 --warmup 500 \
-    --snr_min 0 --snr_max 10 --val_every 1000 --patience 8 \
+    --snr_min 0 --snr_max 10 --val_every 1000 --patience 0 \
     --num_workers 4 --max_hours 11 --out runs/C32_bench
 # if the session dies: add --resume and rerun the same command
 # (without --resume the same --out starts a fresh run and overwrites log.csv / val.csv)
 ```
 
-Expected speed: ~0.15-0.25 s/step on A100 (batch 16), i.e. 1.5-2 h for 30k steps.
+Measured on an L4 (batch 16): 0.70 s/step without GRAND (5.8 h for 30k steps), 0.89 s/step with GRAND and
+12 workers (7.4 h); on an A100 the GRAND run took 0.47 s/step (3.9 h). Early stopping is off on purpose: with the 1e-4 peak the validation score dips below its
+starting point for the first 6000 to 7000 steps and recovers only as the learning rate decays; `--patience 8`
+cut the first GRAND run at 8000 steps with `best.model` still equal to the step-0 weights.
 
 ## 3. GRAND-in-the-loop model
 
@@ -70,7 +73,7 @@ Expected speed: ~0.15-0.25 s/step on A100 (batch 16), i.e. 1.5-2 h for 30k steps
 python train_bitsemcom.py --C 32 --init Pretrain/BitSemCom_C32_stage2_ep480.model \
     --train_dir datasets/DIV2K_train_HR --val_dir datasets/kodak_patches256 \
     --steps 30000 --batch 16 --lr 1e-4 --min_lr 1e-6 --warmup 500 \
-    --snr_min 0 --snr_max 10 --val_every 1000 --patience 8 \
+    --snr_min 0 --snr_max 10 --val_every 1000 --patience 0 \
     --grand crc:0x9eb2:128:112 --grand_budget 2000 --grand_fallback soft --grand_workers 8 \
     --num_workers 4 --max_hours 11 --out runs/C32_grand
 ```
@@ -103,14 +106,14 @@ python experiments/evaluate.py --C 32 \
     --ckpt stage2=Pretrain/BitSemCom_C32_stage2_ep480.model \
     --ckpt bench=runs/C32_bench/best.model --ckpt grand=runs/C32_grand/best.model \
     --snrs 0,2,4,6,8,10,12 --conditions awgn,awgn_over3,awgn_under3,fade8,fade8_h0.1 \
-    --paths noiseless,uncoded_soft,uncoded_hard,coded_soft --budget 2000 \
+    --paths noiseless,uncoded_soft,uncoded_soft_il,uncoded_hard,coded_soft --budget 2000 \
     --save_images 3 --save_snr 4 --out results/eval_C32.jsonl
 python experiments/plot_results.py results/eval_C32.jsonl --out results/figures
 python experiments/plot_training.py runs/C32_bench runs/C32_grand --out results/figures
 # secondary sweep: large budget (fewer abandonments, more miscorrections at low SNR)
 python experiments/evaluate.py --C 32 \
     --ckpt bench=runs/C32_bench/best.model --ckpt grand=runs/C32_grand/best.model \
-    --snrs 0,2,4,6,8,10,12 --conditions awgn,fade8 --paths noiseless,uncoded_soft,coded_soft \
+    --snrs 0,2,4,6,8,10,12 --conditions awgn,fade8 --paths noiseless,uncoded_soft,uncoded_soft_il,coded_soft \
     --budget 100000 --out results/eval_C32_b1e5.jsonl
 python experiments/plot_results.py results/eval_C32_b1e5.jsonl --out results/figures --tag b1e5
 ```
@@ -127,8 +130,10 @@ Bit-exact check of the Python port (run on any machine with MATLAB, or Octave on
 python experiments/grand_verify.py export               # results/grand_verify/testset.mat
 # MATLAB:  >> cd matlab; addpath('GRAND-MATLAB'); verify_port('../results/grand_verify/testset.mat')
 # Octave on Colab:
-!apt-get -qq install octave && bash matlab/fetch_grand_matlab.sh
+!apt-get -qq update && apt-get -qq install -y octave && bash matlab/fetch_grand_matlab.sh
 python experiments/grand_verify.py run --backend octave   # decodes with Duffy's .m files, then compares
+# (Octave's cumsum lacks MATLAB's 'reverse' flag used by landslide.m; the backend puts
+#  matlab/octave_compat/cumsum.m on the Octave path, Duffy's files are not modified)
 ```
 
 The python backend uses the same query accounting as the reference (`--budget_mode level`,
@@ -138,7 +143,7 @@ Final numbers through the reference decoder (slow; use a reduced grid):
 
 ```bash
 python experiments/evaluate.py --C 32 --ckpt bench=runs/C32_bench/best.model --ckpt grand=runs/C32_grand/best.model \
-    --snrs 4,6,8,10 --conditions awgn,fade8 --paths noiseless,uncoded_soft,coded_soft \
+    --snrs 4,6,8,10 --conditions awgn,fade8 --paths noiseless,uncoded_soft,uncoded_soft_il,coded_soft \
     --budget 10000 --grand_backend octave --out results/eval_C32_octave.jsonl
 ```
 

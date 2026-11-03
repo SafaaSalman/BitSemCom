@@ -54,6 +54,12 @@ def to_tensor(p1_flat, like):
     return torch.from_numpy(np.asarray(p1_flat, dtype=np.float32)).reshape(like.shape).to(like.device)
 
 
+def short(p):
+    """Receiver label for the log lines: 'uncoded_soft_il' -> 'unc_soft_il' (truncating to 11 chars made it
+    indistinguishable from 'uncoded_soft')."""
+    return p.replace("uncoded", "unc").replace("coded", "cod")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--C", type=int, default=32)
@@ -159,13 +165,13 @@ def main():
                             Image.fromarray(arr).save(os.path.join(img_dir, "%s_%s_%s_%gdB_%s.png" % (
                                 os.path.splitext(iname)[0], mname, cond["name"], snr, path)))
                     fout.flush()
-                    line = " ".join("%s=%.2f" % (p[:11], results[p]["psnr"]) for p in paths)
+                    line = " ".join("%s=%.2f" % (short(p), results[p]["psnr"]) for p in paths)
                     extra = ""
                     for p in paths:
                         if p.startswith("coded"):
                             r = results[p]
                             extra = " | %s: BER %.4f->%.5f aband %.2f misc %.3f q %.0f" % (
-                                p[:10], r["ber_channel"], r["ber_after"], r["abandon_rate"], r["miscorrect_rate"], r["avg_queries"])
+                                short(p), r["ber_channel"], r["ber_after"], r["abandon_rate"], r["miscorrect_rate"], r["avg_queries"])
                             break
                     print("[%s %2d/%2d %-10s %-14s snr=%4.1f] %s%s" % (mname, ii + 1, len(images), iname[:10], cond["name"], snr, line, extra), flush=True)
         del net
@@ -176,7 +182,7 @@ def main():
     for mname, _ in ckpts:
         for cond in conds:
             print("\nmodel %s | condition %s" % (mname, cond["name"]))
-            print("%-7s" % "Es/N0" + "".join("%14s" % p[:13] for p in paths))
+            print("%-7s" % "Es/N0" + "".join("%14s" % short(p) for p in paths))
             for snr in snrs:
                 print("%-7.1f" % snr + "".join("%14.2f" % np.mean([r["psnr"] for r in agg[(mname, cond["name"], snr, p)]]) for p in paths))
     print("wrote", out_path)

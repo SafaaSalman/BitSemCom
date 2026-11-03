@@ -54,8 +54,18 @@ def _check_duffy():
                             "(or clone https://github.com/kenrduffy/GRAND-MATLAB there)" % DUFFY_DIR)
 
 
-def _matlab_path_cmd():
-    return "".join("addpath('%s');" % d.replace("\\", "/").replace("'", "''") for d in duffy_dirs())
+OCTAVE_COMPAT_DIR = os.path.join(MATLAB_DIR, "octave_compat")
+
+
+def _matlab_path_cmd(engine="matlab"):
+    dirs = duffy_dirs()
+    pre = ""
+    if engine == "octave":
+        # GNU Octave's cumsum has no direction flag, but landslide.m calls cumsum(d,'reverse');
+        # octave_compat/cumsum.m shadows the builtin with one that accepts it. MATLAB never sees that folder.
+        pre = "warning('off','Octave:shadowed-function');"
+        dirs = dirs + [OCTAVE_COMPAT_DIR]
+    return pre + "".join("addpath('%s');" % d.replace("\\", "/").replace("'", "''") for d in dirs)
 
 
 def decode_python(llr_blocks, H, max_queries, variant="1line", budget_mode="level"):
@@ -83,7 +93,7 @@ def decode_matlab_files(llr_blocks, H, max_queries, variant="1line", engine="mat
     fout = os.path.join(wd, "out.mat")
     savemat(fin, dict(llr=np.asarray(llr_blocks, dtype=np.float64), H=np.asarray(H, dtype=np.float64),
                       max_queries=float(max_queries), variant=variant))
-    code = "%s orbgrand_decode_file('%s','%s');" % (_matlab_path_cmd(), fin.replace("\\", "/"), fout.replace("\\", "/"))
+    code = "%s orbgrand_decode_file('%s','%s');" % (_matlab_path_cmd(engine), fin.replace("\\", "/"), fout.replace("\\", "/"))
     if engine == "matlab":
         cmd = [exe, "-batch", code]
     else:
