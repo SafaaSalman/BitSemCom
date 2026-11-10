@@ -6,16 +6,18 @@ __pycache__/
 venv/
 env/
 
-# Model checkpoints and training outputs (download pretrained models from the Baidu link in readme.md)
+# Model checkpoints and training outputs (see README.md for where to get the pretrained models)
 *.model
 *.pth
 *.pt
 *.ckpt
-Pretrain/*
-!Pretrain/model.txt
+Pretrain/
 history/
 logs/
 runs/
+runs_tb_kodak/
+test_probs_C*/
+Image_samples/
 wandb/
 
 # Editors / OS
@@ -23,3 +25,6 @@ wandb/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Datasets (downloaded, not tracked)
+datasets/
