@@ -31,7 +31,7 @@ The result is negative but clear. The benchmark gained +0.75 dB over the old che
 | bench | 30k steps, warmup + cosine LR 1e-4 to 1e-6, SNR per batch U[0, 10] dB | no | 24.22 |
 | grand | identical recipe and starting weights | yes: CRC(128,112) + ORBGRAND, budget 2000, soft fallback | 24.02 |
 
-**Channel conditions.** AWGN with perfect CSI; AWGN where the receiver's SNR estimate is 3 dB too high or 3 dB too low; block Rayleigh fading with one fade per token (8 QPSK symbols); the same fading with a channel-estimate error of variance 0.1. Es/N0 per symbol from 0 to 12 dB in 2 dB steps.
+**Channel conditions.** AWGN with perfect CSI; AWGN where the receiver's SNR estimate is 3 dB too high or 3 dB too low; block Rayleigh fading with one fade per 8 QPSK symbols (16 bits, half a C = 32 token); the same fading with a channel-estimate error of variance 0.1. Es/N0 per symbol from 0 to 12 dB in 2 dB steps.
 
 **Receivers.** Perfect bits (the ceiling), the plain BitSemCom soft receiver, the same with the interleaver, hard 0/1 decisions, and the coded receiver (interleaver + CRC + ORBGRAND, soft fallback).
 
@@ -123,7 +123,7 @@ This is the main sweep: for each model and condition, the coded receiver against
 
 ![Paired PSNR gains in block Rayleigh fading: room, interleaver only, and interleaver plus code](figures/grand_review/review_gain_fade8.png)
 
-*Figure 7. Bench model in block Rayleigh fading (one fade per token). Left: room up to perfect bits (grey) against the coded gain (orange). Right: the interleaver alone (blue) against the interleaver plus code (orange). Both coloured series are measured against the plain soft receiver without an interleaver.*
+*Figure 7. Bench model in block Rayleigh fading (one fade per 8 symbols). Left: room up to perfect bits (grey) against the coded gain (orange). Right: the interleaver alone (blue) against the interleaver plus code (orange). Both coloured series are measured against the plain soft receiver without an interleaver.*
 
 | Es/N0 (dB) | perfect bits | plain soft | + interleaver | + interleaver + code | code minus interleaver-only (wins) | abandoned | miscorrected | avg. guesses |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -27,7 +27,7 @@ Branches: `main` is the untouched BitSemCom code, `grand-implementation` has eve
 
 ## 2. Setup
 
-Python 3.10 or newer and PyTorch 2.x. A CUDA GPU is needed for training and makes the evaluation sweeps fast; the GRAND decoder itself runs on the CPU.
+Python 3.10 or newer and PyTorch 2.x. A CUDA GPU is needed for everything that runs the autoencoder (training, the sweeps, the LLR study): the original Swin code places its attention masks on the GPU (`network/encoder.py`). The GRAND decoder, its self-test and validation, and the plotting scripts run on the CPU.
 
 ```
 git clone https://github.com/SafaaSalman/BitSemCom -b grand-implementation
@@ -136,7 +136,7 @@ Between the bit mapper and the semantic decoder we insert: pad the bits to block
 
 ## 5. Reproducing round 1 (C = 16 / 32 / 64, stage-2 checkpoints)
 
-Runs on CPU plus any GPU in minutes. Outputs go to `results/<name>.jsonl`; `summarize.py` turns them into the tables of `docs/grand_results.md`.
+Needs a CUDA GPU; runs in minutes. Outputs go to `results/<name>.jsonl`; `summarize.py` turns them into the tables of `docs/grand_results.md`.
 
 ```
 python grand/selftest.py

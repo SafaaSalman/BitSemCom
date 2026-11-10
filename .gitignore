@@ -6,7 +6,7 @@ __pycache__/
 venv/
 env/
 
-# Model checkpoints and training outputs (download pretrained models from the Baidu link in readme.md)
+# Model checkpoints and training outputs (download pretrained models from the Baidu link in README.md)
 *.model
 *.pth
 *.pt

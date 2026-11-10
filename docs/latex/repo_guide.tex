@@ -47,6 +47,7 @@ Branch \texttt{main} holds the original code only; branch \texttt{grand-implemen
 described here.
 
 \section{How one image travels through the system}
+\label{sec:pipeline}
 
 Figure~\ref{fig:pipeline} shows the path of one $256\times256$ image. The grey boxes are the original
 BitSemCom, the orange boxes are what we added. Each box is explained below.
@@ -134,7 +135,7 @@ Path & What it is \\
 \endhead
 \file{main.py} & the original training and test script (two stages: error-free channel, then noisy channel). Hard-coded dataset paths in its \texttt{config} class. Needs \texttt{lpips}, \texttt{thop}, \texttt{tensorboardX} and a CUDA GPU. \\
 \file{network/network.py} & the \texttt{WITT} model: encoder, bit mapper (\texttt{Resample\_Layer}), \texttt{QPSK\_soft} (channel + LLR + $P(1)$), decoder. \\
-\file{network/encoder.py}, \file{decoder.py}, \file{modules.py} & Swin blocks. \file{network/channel.py} is unused by the bit path. \\
+\file{network/encoder.py}, \file{decoder.py}, \file{modules.py} & Swin blocks. \file{network/channel.py} and \file{network/settings.py} are not used by the bit path. \\
 \file{data/datasets.py}, \file{loss/distortion.py}, \file{utils.py} & loaders, MS-SSIM, logging helpers of the original code. \\
 \file{train_bitsemcom.py} & our trainer: fixed step budget, warmup + cosine learning rate, random SNR per batch, validation every $N$ steps, best checkpoint, resume; \texttt{-{}-grand} puts the coded link + ORBGRAND into the loop. \\
 \file{grand/codes.py} & builds CRC and random linear codes: generator matrix $G=[I\,|\,P]$, parity-check matrix $H=[P^T\,|\,I]$, \texttt{encode}, \texttt{is\_codeword}. \\
@@ -219,11 +220,13 @@ for all 30k steps, because with fixed-power QPSK the encoder has no handle on wh
 \section{Evaluation}
 
 \subsection{Receivers}
+\label{sec:receivers}
 
 Every receiver gets the same semantic bits and the same channel noise for a given (image, SNR, seed),
 so all comparisons are paired: the difference between two receivers on one image is a difference
 between two runs that share everything except the receiver.
 
+\begin{center}
 \begin{tabular}{p{0.26\textwidth} p{0.68\textwidth}}
 \toprule
 Name & What the semantic decoder receives \\
@@ -237,6 +240,7 @@ Name & What the semantic decoder receives \\
 \texttt{*\_ebn0}, \texttt{*\_noil} & round 1 only: coded path at equal energy per semantic bit; coded path without interleaver \\
 \bottomrule
 \end{tabular}
+\end{center}
 
 \subsection{Channel conditions}
 \label{sec:conditions}
@@ -293,7 +297,8 @@ random linear code; \texttt{encode(u, G)} is $uG \bmod 2$. \file{grand/orbgrand.
 are packed into 64-bit integers and the noise patterns are cached, so the decoder runs at roughly two
 million guesses per second in pure numpy. \texttt{budget\_mode='level'} reproduces the per-weight-level
 budget check of Duffy's MATLAB code, so a block may use up to about 15\% more guesses than the nominal
-budget; this mode is used everywhere numbers are compared with the reference.
+budget; \file{evaluate.py} and the trainer use it (round 2); the round-1 sweeps of \file{run_grand.py} stop exactly at
+the budget (\texttt{budget\_mode='query'}).
 
 The port was validated twice: \file{grand/validate_duffy.py} reproduces the block error rates and
 average guess counts of the \texttt{RESULTS/*.mat} files shipped with GRAND-MATLAB within Monte Carlo
@@ -337,7 +342,7 @@ with its figures in \file{docs/figures/grand_review/}), plus this guide and the 
 \item \textbf{LLR sign.} Positive LLR means bit 0, in BitSemCom, in Duffy's code and in ours. The
 decoder consumes $P(\text{bit}=1)=\sigma(-\mathrm{LLR})$, never bits and never LLRs.
 \item \textbf{SNR.} Always $E_s/N_0$ per QPSK symbol in dB. The raw bit error rate is
-$Q(\sqrt{E_s/N_0})$: 16\% at 0 dB, 5.8\% at 4 dB, 2.3\% at 6 dB, 0.6\% at 8 dB. Duffy's BPSK curves at
+$Q(\sqrt{E_s/N_0})$: 16\% at 0 dB, 5.7\% at 4 dB, 2.3\% at 6 dB, 0.6\% at 8 dB. Duffy's BPSK curves at
 $E_b/N_0 = x$ correspond to this code's QPSK at $E_s/N_0 = x + 3$ dB plus the rate term.
 \item \textbf{Equal $E_b/N_0$} for a rate-$R$ code means running the coded path at
 $E_s/N_0 + 10\log_{10} R$, i.e. $-0.58$ dB for 112/128.
@@ -364,6 +369,280 @@ python experiments/evaluate.py --C 32 --ckpt bench=runs/C32_bench/best.model --c
 python experiments/plot_results.py results/eval_C32.jsonl --out results/figures
 python experiments/plot_review_gains.py results/eval_C32.jsonl --b1e5 results/eval_C32_b1e5.jsonl --out docs/figures/grand_review
 \end{lstlisting}
+
+\section{GRAND explained from scratch}
+\label{sec:grand}
+
+This section is for readers who have never met a channel code or GRAND. It uses the numbers of our own
+setup throughout: blocks of $k=112$ data bits, codewords of $n=128$ bits, 16 parity bits.
+
+\subsection{What a channel code is}
+
+The sender cuts the bit stream into blocks of 112 bits and appends 16 \emph{parity bits} to each block.
+The parity bits are computed from the data bits by a fixed rule (ours: a CRC polynomial), so the
+receiver can recompute them. The 128-bit result is a \emph{codeword}. Of all $2^{128}$ possible 128-bit
+words only $2^{112}$ are codewords, one in $2^{16}=65{,}536$. The receiver checks membership with the
+parity-check matrix $H$: a word $c$ is a codeword exactly when $Hc=0$ (mod 2); the vector $Hc$ is called
+the \emph{syndrome}. Because our code is \emph{systematic}, the 112 data bits sit unchanged at the front
+of the codeword: once a block is accepted, the receiver simply reads its first 112 bits.
+
+Two numbers about our code matter later. The polynomial \texttt{0x9eb2} is one of the 16-bit
+polynomials recommended in Koopman's CRC tables: for data blocks of up to 135 bits (ours is 112) any two
+codewords differ in at least 6 positions, so no pattern of 5 or fewer flipped bits can turn one codeword
+into another.\footnote{\url{https://users.ece.cmu.edu/~koopman/crc/hd6.html}, row \texttt{0x9eb2}.} And
+a random 128-bit word that is not a codeword passes the check with probability $1/65{,}536$.
+
+\subsection{Decoding by guessing the noise}
+
+A classical decoder is built for one family of codes and uses that family's structure (the trellis of a
+convolutional code, the graph of an LDPC code). GRAND (Guessing Random Additive Noise Decoding; Duffy,
+Li and M\'edard, 2019) does something simpler and more general. It does not search for the codeword; it
+searches for the \emph{noise}. The received hard decisions $y$ are the sent codeword $c$ with some bits
+flipped, $y = c \oplus e$. GRAND lists candidate flip patterns $e$ from the most likely to the least
+likely and asks, for each one, whether $y \oplus e$ is a codeword. The first yes wins and the answer is
+$c = y \oplus e$. Because the only thing it needs from the code is the membership test $Hc=0$, the same
+decoder works for any linear code; you only hand it a different $H$. GRAND is practical when the code has
+few parity bits (ours has 16) and the channel errors are not too frequent, because that is when the right
+pattern is found after few guesses.
+
+The order of the guesses is everything. With hard decisions alone every single flip is equally likely,
+every double flip is equally likely, and so on, so GRAND would try no flip, then the 128 single flips,
+then the 8{,}128 pairs: finding two errors can cost up to 8{,}257 guesses. With soft information it is
+far cheaper, because the wrong bits are almost always among the least reliable ones.
+
+\subsection{ORBGRAND: ordering the guesses by reliability}
+
+The demodulator gives every bit an LLR, and its magnitude $|\mathrm{LLR}|$ says how sure the demodulator
+is. ORBGRAND (Ordered Reliability Bits GRAND; Duffy 2021; Duffy, An and M\'edard 2022) sorts the 128 bits
+from least to most reliable and gives them ranks $1, 2, \dots, 128$. The \emph{basic} variant gives every
+flip pattern a cost, the sum of the ranks of the bits it flips (the ``logistic weight''), and tries the
+patterns in order of increasing cost: flip rank 1 (cost 1); rank 2 (cost 2); ranks 1 and 2, or rank 3
+(cost 3); ranks 1 and 3, or rank 4 (cost 4); and so on. The Landslide algorithm (\texttt{landslide} in
+\file{grand/orbgrand.py}) generates all patterns of a given cost and number of flips directly, without
+listing everything first. The \emph{1-line} variant, our default, first fits a straight line to the sorted
+reliabilities and charges each flipped bit an offset plus its rank instead of the rank alone; this follows
+the true likelihoods more closely when the noise is strong. In the self-test a block with two flipped bits
+is decoded in 5 guesses (basic) or 31 guesses (1-line) instead of thousands.
+
+Two things follow from ``only the order matters''. Multiplying all LLRs by a constant does not change
+their ranking, so an SNR misestimate at the receiver changes nothing in ORBGRAND's decisions (it does
+change the soft values the semantic decoder sees). And there is no scale or threshold to tune: the
+decoder has a single parameter, the budget.
+
+\begin{conceptbox}[title={Budget, abandonment, miscorrection}]
+ORBGRAND stops after a fixed number of guesses, the \emph{budget}; a block that is not decoded by then is
+\emph{abandoned}. Abandonment is an honest answer (``I could not decode this''), and our soft fallback
+makes it harmless: the semantic decoder then gets what it would have got without the code. The bad
+outcome is a \emph{miscorrection}: a wrong word that happens to pass the check. Every wrong guess has
+about one chance in 65{,}536 of passing by accident, so when the true pattern is out of reach, about
+$2000/65{,}536 \approx 3\%$ of the blocks are miscorrected at a budget of 2000 and about 78\% at a budget
+of 100{,}000. These rough estimates match what the sweeps measured at low SNR (2 to 3\% and 67 to 81\%).
+This is why a larger budget made the results worse: it does not make 16 parity bits stronger, it turns
+declared failures into hidden ones.
+\end{conceptbox}
+
+\subsection{Where this lives in the code}
+
+\file{grand/codes.py} builds $G$ and $H$ from the polynomial (\texttt{make\_crc}) or at random
+(\texttt{make\_rlc}); \texttt{encode(u, G)} is $uG \bmod 2$. \file{grand/orbgrand.py} is the decoder.
+\texttt{decode(llr)} takes the hard decisions, computes their syndrome (that is guess number one; if it is
+zero the block is clean), sorts the bits by $|\mathrm{LLR}|$, walks the schedule of costs, asks Landslide
+for the patterns of each cost, computes all their syndromes in one vectorised step from the pre-packed
+columns of $H$, and stops at the first pattern whose syndrome equals the received one. It returns the
+word, the number of guesses and the abandoned flag. Syndromes are packed into 64-bit integers, which is
+why $n-k$ must stay below 64.
+
+\section{How GRAND was put into BitSemCom}
+\label{sec:integration}
+
+\textbf{Where.} Between the bit mapper and the semantic decoder, and nowhere else. The network is not
+modified: the encoder still produces $256\cdot C$ bits and the decoder still receives $256\cdot C$
+numbers between 0 and 1. Everything we added lives in the channel in between.
+
+\textbf{At evaluation time} (\texttt{CodedLink.transmit} in \file{experiments/channel_coding.py}) one
+image goes through these steps:
+\begin{enumerate}
+\item the 8192 bits ($C=32$) are padded with 96 zeros to 74 blocks of 112, and each block is encoded to
+128 bits (9472 coded bits, 4736 QPSK symbols instead of 4096);
+\item the coded bits are shuffled by a fixed pseudo-random permutation, the interleaver (same seed on
+both sides), so that every codeword is spread over the whole image;
+\item QPSK, the channel (AWGN or block fading, with the condition's CSI error), one LLR per bit;
+\item the LLRs are un-shuffled and cut back into 74 blocks, and ORBGRAND decodes each block within the
+budget;
+\item for a decoded block the first 112 bits are passed on as exact 0 or 1; for an abandoned block the
+112 soft values $P(\text{bit}=1)$ of its data bits are passed on instead (soft fallback); the 96 padding
+positions are dropped;
+\item the semantic decoder reconstructs the image, and the block statistics (abandoned, miscorrected,
+guesses, time) go into the result row.
+\end{enumerate}
+The receivers of section~\ref{sec:receivers} are different exits from this chain: \texttt{uncoded\_soft}
+skips steps 1, 2, 4 and 5; \texttt{uncoded\_soft\_il} keeps the interleaver but skips the code;
+\texttt{noiseless} skips the channel altogether.
+
+\textbf{Inside training} (\texttt{GrandChannel} in \file{experiments/grand_layer.py}, switched on with
+\texttt{-{}-grand}) the same \texttt{CodedLink.transmit} runs on every image of every batch, in a pool of
+worker processes (one image per job, 8 workers by default), with the budget of
+\texttt{-{}-grand\_budget} and the MATLAB-style budget accounting. The returned soft values are stacked
+into a tensor of the same shape the uncoded torch channel would produce and handed to the decoder.
+ORBGRAND is not the bottleneck: in the $C=32$ run it took about 0.2 s of a 0.47 s training step.
+
+\begin{conceptbox}[title={The gradient trick, in words}]
+Padding, encoding, interleaving and guessing are integer operations: there is no derivative to send back
+to the encoder. We therefore send the same bits a second time through the ordinary differentiable QPSK
+channel (with its own fresh noise) and build the tensor the decoder receives as ``GRAND's values, plus
+(soft values minus a detached copy of the soft values)''. The bracket is zero, so the decoder sees exactly
+GRAND's output; but autograd only knows about the soft channel, so the encoder receives exactly the
+gradient it receives in the benchmark run. The two runs therefore differ in one thing only: what the
+decoder is shown. That is deliberate, so that any difference between the two models can be attributed to
+the decoder learning, or not learning, to use GRAND's output.
+\end{conceptbox}
+
+\textbf{What came out.} The decoder did not learn to profit from GRAND: the GRAND-trained model is 0.1
+to 0.24 dB worse than the benchmark with every receiver, and the code itself adds at most $+0.08\dB$ on
+AWGN. In plain words: the semantic decoder was trained on noisy inputs and already shrugs off about 5\%
+of scattered bit errors; a code can only fix scattered errors; and at the SNRs where 16 parity bits are
+enough there is less than 0.2 dB left to gain. The companion results document has the tables.
+
+\section{Questions students ask}
+\label{sec:faq}
+
+\begin{description}[style=nextline]
+
+\item[Where do I start?]
+Run \texttt{python grand/selftest.py} (under a second, no GPU). Then run one tiny sweep, for example
+\texttt{python experiments/run\_grand.py -{}-C 16 -{}-limit 2 -{}-snrs 6 -{}-out results/try.jsonl}
+(two images, one SNR, seven receivers: about 15 seconds on a laptop GPU, 14 rows), and read the rows it
+writes. Then read the results document. The README has every command; section~\ref{sec:pipeline} of
+this guide explains what they do.
+
+\item[Can I work without a GPU?]
+Only partly. Everything that runs the autoencoder needs a CUDA GPU, because the original Swin code
+places its attention masks on the GPU (\file{network/encoder.py}); that includes the sweeps, the LLR
+study and training. The GRAND decoder, its self-test and its validation against Duffy's curves, the
+summaries and all plotting from existing JSONL files run on the CPU.
+
+\item[Do I need the original main.py?]
+No, unless you want to reproduce the authors' own training or testing. Our scripts never import it; they
+build the model with \file{experiments/bitsemcom_io.py}, which also refuses a checkpoint whose keys do
+not match the model exactly. \file{main.py} needs extra packages (\texttt{lpips}, \texttt{thop},
+\texttt{tensorboardX}) and hard-coded dataset paths.
+
+\item[Which checkpoint should I use?]
+The stage-2 checkpoints are the original models at $C=16$, 32 and 64 and the starting point of
+everything. \texttt{runs/C32\_bench/best.model} is the better $C=32$ model from round 2, and
+\texttt{runs/C32\_grand/best.model} is the one trained with GRAND in the loop. Without \texttt{-{}-ckpt}
+the scripts take the newest \texttt{*C<C>\_*.model} in \file{Pretrain/}.
+
+\item[What is C and which value should I use?]
+$C$ is the number of bits per token; a $256\times256$ image has 256 tokens, so $256\cdot C$ bits.
+Choosing $C$ is choosing the bandwidth: doubling it adds about 1.1 dB of PSNR. Round 2 used $C=32$.
+
+\item[What is a soft value and why does the decoder want it?]
+$P(\text{bit}=1)$: 0.02 means ``almost surely 0'', 0.5 means ``no idea''. A faded or very noisy bit
+arrives as roughly 0.5 and the decoder treats it as unknown rather than wrong. A hard decision throws
+that away: at 0 dB it costs 1.7 dB on AWGN and 2.7 dB in fading. So keep soft values whenever you can,
+and read ``coded beats hard decisions'' with care: it mostly measures soft against hard, not GRAND.
+
+\item[Why does a positive LLR mean bit 0?]
+It is the convention of BitSemCom's \texttt{QPSK\_soft} and of Duffy's code: $\mathrm{LLR} =
+\log P(0)/P(1)$ and $P(1)=\sigma(-\mathrm{LLR})$. Keep it if you add a channel; otherwise ORBGRAND flips
+the wrong bits and the decoder gets inverted probabilities.
+
+\item[Is an abandoned block a failure?]
+No. It means ``not decoded, passed through''. With soft fallback it costs nothing against the uncoded
+receiver, and it is logged (\texttt{abandon\_rate}). A \emph{miscorrected} block is the failure: wrong
+bits delivered with full confidence.
+
+\item[Why not just raise the budget?]
+Because 16 parity bits do not get stronger with more guesses; a larger budget mostly turns abandoned
+blocks into miscorrected ones (see the box in section~\ref{sec:grand}). The 100{,}000-guess sweep lost
+0.4 to 1.3 dB on AWGN and 0.5 to 2.2 dB in fading below the SNR where the code works.
+
+\item[Why a budget of 2000?]
+It is the budget the GRAND-in-the-loop model was trained with, so the main sweep evaluates it as it was
+trained. It is large enough that from 8 dB nearly every block decodes within about 10 guesses, and small
+enough to keep miscorrections at a few percent and the training step fast.
+
+\item[Why a CRC, and why this polynomial?]
+GRAND works with any linear code; a CRC is systematic, can be built for any block length from one
+polynomial, and 16 parity bits keep both the overhead (16\%) and the guesswork small.
+\texttt{0x9eb2} comes from Koopman's tables (minimum distance 6 for our block length). Round 1 also tried
+a random linear code with 24 parity bits (\texttt{rlc:128:104:0}), which removed the miscorrections at a
+higher overhead, and a short CRC(64,48).
+
+\item[Why not an LDPC or polar code?]
+The thesis question is GRAND, and GRAND is at its best with short codes that have few parity bits. More
+parity bits also cost bandwidth, and in this system 16\% of bandwidth is worth about 0.2 dB as semantic
+bits, more than any coding gain we measured.
+
+\item[Why is the SNR given as Es/N0 and not Eb/N0?]
+The channel carries QPSK symbols, so $E_s/N_0$ per symbol is what the simulation sets. For the uncoded
+system $E_b/N_0 = E_s/N_0 - 3$ dB; the coded path spends a further $0.58$ dB per semantic bit (rate
+112/128). Duffy's BPSK curves at $E_b/N_0 = x$ correspond to our $E_s/N_0 = x + 3 + 10\log_{10}R$. The
+\texttt{*\_ebn0} receivers of round 1 run the coded path 0.58 dB lower so that both sides spend the same
+energy per semantic bit.
+
+\item[Why are the comparisons paired?]
+Every receiver gets the same bits and the same channel noise for a given image, SNR and seed, so the
+difference between two receivers on one image is caused by the receiver alone. Averaged over 24 images,
+that difference has a standard error of 0.01 to 0.05 dB, which is what makes gains of 0.05 dB readable
+at all. Never compare rows from different seeds or sweeps, and never trust a PSNR difference below about
+0.03 dB.
+
+\item[Why can we not backpropagate through GRAND?]
+Encoding, interleaving and guessing are operations on integers; they have no derivative. The trainer
+uses the trick described in section~\ref{sec:integration}: the forward value comes from GRAND, the
+gradient from a second pass through the soft channel (\texttt{-{}-grand\_grad soft}); the alternative
+\texttt{identity} is plain straight-through.
+
+\item[Why did GRAND in the loop make the model worse rather than better?]
+Three things were visible. The abandonment rate never moved during training, so the encoder cannot
+steer which blocks decode (the QPSK power and the code are fixed). The gap to the benchmark is the same
+with perfect bits as with the coded receiver, so the result is a worse autoencoder, not a model that
+specialised to GRAND. And the training loss stayed about 3\% higher, which points at the surrogate
+gradient. The results document proposes the next test: freeze the encoder and fine-tune only the decoder.
+
+\item[Why 74 blocks and 96 zero bits?]
+$8192/112 = 73.1$, so 74 blocks are needed and the last one is filled with 96 zeros. The padding is
+dropped after decoding and is counted in the 16\% overhead. For $C=16$ it is 37 blocks, for $C=64$ 147.
+
+\item[Does the semantic decoder know which bits GRAND decoded?]
+No. Its input is a vector of probabilities, and an ``exact bit'' is simply a probability of 0 or 1. The
+backbone has an SNR input that could carry such a hint, but in these checkpoints it was found to be inert.
+Passing an explicit flag is a possible extension.
+
+\item[What do fade8, fade16 and fade1 mean?]
+One Rayleigh gain per 8, 16 or 1 QPSK symbols. \texttt{fade8} is 16 bits: one $C=16$ token or half a
+$C=32$ token; \texttt{fade16} is one $C=32$ token; \texttt{fade1} is fast fading. A deep fade on
+\texttt{fade8} erases a whole token, which is exactly what the semantic decoder handles worst and what the
+interleaver repairs.
+
+\item[How do I add a new code, channel condition or receiver?]
+A code is a string, \texttt{crc:<Koopman polynomial>:<n>:<k>} or \texttt{rlc:<n>:<k>:<seed>}, parsed by
+\texttt{make\_code} in \file{experiments/channel_coding.py}; the polynomial degree must equal $n-k$ and
+$n-k$ must stay below 64. A channel condition is a name in the grammar of
+\file{experiments/conditions.py}, for example \texttt{fade16\_h0.2\_under2}. A receiver is a branch in
+the path loop of \file{experiments/evaluate.py} (round 2) or \file{experiments/run_grand.py} (round 1);
+copy the nearest existing branch and give it a new name.
+
+\item[How long does everything take?]
+The self-test under a second. The small sweeps minutes (the autoencoder on the GPU, ORBGRAND on the
+CPU); the full round-2 sweep is longer because of five conditions, seven SNRs, five receivers and three
+models, and LPIPS and CLIP download their weights on first use. Training is the expensive part: 30k steps
+took 5.8 h on an L4 and 3.9 h on an A100, with or without GRAND.
+
+\item[Can the Python decoder be trusted?]
+It reproduced the block error rates and guess counts published with Duffy's GRAND-MATLAB code
+(\file{grand/validate_duffy.py}), and the self-test checks the Landslide patterns by brute force. The
+bit-for-bit comparison on real LLR blocks (\file{experiments/grand_verify.py}, 740 blocks exported) still
+needs a MATLAB session; until then every number in the reports comes from the Python port.
+
+\item[What should I never do?]
+Compare numbers from different seeds or sweeps. Evaluate the GRAND-trained model at a budget it was not
+trained with. Mix $E_s/N_0$ and $E_b/N_0$. Feed hard bits to the decoder and call the loss a GRAND
+result. Flip the LLR sign.
+
+\end{description}
 
 \section{Glossary}
 

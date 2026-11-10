@@ -93,7 +93,7 @@ every comparison is a \emph{paired} difference averaged over the 24 Kodak $256\t
 with its standard error (s.e.) and the number of images on which the first receiver wins.
 
 \textbf{Channels.} AWGN with perfect channel knowledge; AWGN where the receiver's SNR estimate is 3 dB
-too high or too low; block Rayleigh fading with one gain per token (8 symbols); the same fading with a
+too high or too low; block Rayleigh fading with one gain per 8 QPSK symbols (16 bits, half a $C=32$ token); the same fading with a
 channel-estimate error of variance 0.1. SNR ($E_s/N_0$ per symbol) from 0 to 12 dB.
 
 \textbf{Metrics.} PSNR is the headline number (differences under about 0.03 dB are noise). MS-SSIM,
@@ -296,7 +296,7 @@ soft-input receivers are indistinguishable. Bottom: block fading, the interleave
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{review_gain_fade8.png}
-\caption{Bench model in block Rayleigh fading (one fade per token). Left: room up to perfect bits
+\caption{Bench model in block Rayleigh fading (one fade per 8 symbols). Left: room up to perfect bits
 (grey) against the coded gain (orange). Right: the interleaver alone (blue) against the interleaver plus
 code (orange), both measured against the plain receiver.}
 \label{fig:gainfade}
